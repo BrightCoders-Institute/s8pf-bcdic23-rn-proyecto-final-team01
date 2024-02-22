@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "625543201305",
+    "project_id": "roamify-bb95e",
+    "storage_bucket": "roamify-bb95e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:625543201305:android:cea58c1cdf58def9cf2088",
+        "android_client_info": {
+          "package_name": "com.roamify"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtgX2znfgpA84gWk5XVgXv5CU8GtYqHbQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
