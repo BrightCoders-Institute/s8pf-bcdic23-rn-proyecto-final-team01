@@ -1,21 +1,23 @@
-import {View, Text, StyleProp, ViewProps, StyleSheet} from 'react-native';
+// React native
+import {View, StyleSheet} from 'react-native';
 import React from 'react';
 
 interface Props {
   children: React.ReactNode;
-  styles?: StyleProp<ViewProps>;
 }
 
 const SectionComponent = (props: Props) => {
-  const {children, styles} = props;
+  const {children} = props;
 
-  return <View style={[styles, sectionStyle.container]}>{children}</View>;
+  return <View style={sectionStyle.container}>{children}</View>;
 };
 
 const sectionStyle = StyleSheet.create({
   container: {
     paddingHorizontal: 16,
     display: 'flex',
+    flexDirection: 'column',
+    gap: 15,
     justifyContent: 'center',
   },
 });

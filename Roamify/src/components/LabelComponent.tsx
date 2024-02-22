@@ -1,5 +1,9 @@
-import {Text, View} from 'react-native';
+// React native
+import {View} from 'react-native';
 import React from 'react';
+
+// Components
+import TextComponent from './TextComponent';
 
 interface Props {
   text: string;
@@ -18,10 +22,8 @@ const LabelComponent = (props: Props) => {
         gap: 10,
         marginBottom: 10,
       }}>
-      <Text style={{fontSize: 16, color: '#040415', fontWeight: 'bold'}}>
-        {text}
-      </Text>
-      {required === true && <Text style={{color: 'red'}}>*</Text>}
+      <TextComponent text={text} font="bold" size={16} />
+      {required === true && <TextComponent text="*" color="red" />}
     </View>
   );
 };
