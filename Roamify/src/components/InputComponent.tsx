@@ -5,22 +5,14 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-
-// React hooks
 import React, {useState} from 'react';
-
-// Icons
 import Icon from 'react-native-vector-icons/Ionicons';
-
-// Global Styles
 import {globalStyles} from '../theme/globalStyles';
 
 // Receives all Input props
 const InputComponent = (props: TextInputProps) => {
-  // Stores value of secure
   const [secureTextEntry, setSecureTextEntry] = useState(props.secureTextEntry);
 
-  // Changes value of secure to true or false on click
   const handleShowHide = () => {
     setSecureTextEntry(!secureTextEntry);
   };

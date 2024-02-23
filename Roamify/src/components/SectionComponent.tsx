@@ -1,4 +1,3 @@
-// React native
 import {View, StyleSheet} from 'react-native';
 import React from 'react';
 
@@ -14,10 +13,10 @@ const SectionComponent = (props: Props) => {
 
 const sectionStyle = StyleSheet.create({
   container: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 5,
     display: 'flex',
     flexDirection: 'column',
-    gap: 15,
+    gap: 10,
     justifyContent: 'center',
   },
 });

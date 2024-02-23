@@ -1,13 +1,6 @@
-// React native
 import React from 'react';
-
-// Components
 import TextComponent from './TextComponent';
-
-// Global styles
 import {globalStyles} from '../theme/globalStyles';
-
-// Libraries
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {StyleProp, View, ViewStyle} from 'react-native';
 

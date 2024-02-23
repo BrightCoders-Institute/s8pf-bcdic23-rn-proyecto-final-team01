@@ -1,17 +1,8 @@
-// React native
 import {View, StyleSheet} from 'react-native';
 import React from 'react';
-
-// Global styles
 import {globalStyles} from '../theme/globalStyles';
-
-// Components
 import TextComponent from './TextComponent';
-
-// Libraries
 import {TouchableOpacity} from 'react-native-gesture-handler';
-
-// Icons
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const NavBar = () => {

@@ -1,11 +1,6 @@
-// React native
 import {View, Text, Image, StyleSheet} from 'react-native';
 import React from 'react';
-
-// Global Styles
 import {globalStyles} from '../theme/globalStyles';
-
-// Components
 import TextComponent from './TextComponent';
 
 const Header = () => {
