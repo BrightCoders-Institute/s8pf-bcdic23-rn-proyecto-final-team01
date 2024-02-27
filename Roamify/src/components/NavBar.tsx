@@ -32,8 +32,6 @@ const styles = StyleSheet.create({
   navBarContainer: {
     gap: 20,
     justifyContent: 'center',
-    position: 'absolute',
-    bottom: 0,
     width: '100%',
     paddingVertical: 20,
     backgroundColor: 'white',
