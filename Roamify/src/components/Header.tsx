@@ -7,10 +7,7 @@ const Header = () => {
   return (
     <View style={styles.headerContainer}>
       <View style={globalStyles.rowContainer}>
-        <Image
-          source={require('../images/LogoRoamify.jpg')}
-          style={styles.logo}
-        />
+        <Image source={require('../assets/logo.jpg')} style={styles.logo} />
         <TextComponent text="Roamify" size={32} font="bold" />
       </View>
       <Text style={{color: 'black'}}>current user</Text>

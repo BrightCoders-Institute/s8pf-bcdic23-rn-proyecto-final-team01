@@ -13,10 +13,10 @@ const SectionComponent = (props: Props) => {
 
 const sectionStyle = StyleSheet.create({
   container: {
-    paddingHorizontal: 5,
+    paddingHorizontal: 25,
     display: 'flex',
     flexDirection: 'column',
-    gap: 10,
+    gap: 35,
     justifyContent: 'center',
   },
 });
