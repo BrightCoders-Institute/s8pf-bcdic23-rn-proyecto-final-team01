@@ -1,23 +1,16 @@
-import {
-  TextInput,
-  Text,
-  TextInputProps,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {TextInput, Text, TouchableOpacity, View} from 'react-native';
 import React, {useState} from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {globalStyles} from '../theme/globalStyles';
-import {Controller, FieldError} from 'react-hook-form';
+import {Controller} from 'react-hook-form';
 import {FormFieldProps} from '../../types';
 
 const InputComponent: React.FC<FormFieldProps> = ({
   name,
   placeholder,
-  style,
   secureTextEntry,
-  register,
-  error,
+  control,
+  rules,
 }) => {
   const [secureTextEntryState, setSecureTextEntryState] =
     useState(secureTextEntry);
@@ -27,44 +20,48 @@ const InputComponent: React.FC<FormFieldProps> = ({
   };
 
   return (
-    <View style={{display: 'flex', flexDirection: 'column'}}>
-      <View style={globalStyles.rowContainer}>
-        {/* <>
-          {console.log(name, error)}
-          {console.log(name, register)}
-        </> */}
-        <TextInput
-          style={style}
-          placeholder={placeholder}
-          placeholderTextColor={'#6A6A6A'}
-          secureTextEntry={secureTextEntryState}
-          {...register(name)}
-        />
-        <>
-          {secureTextEntry ? (
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={handleShowHide}
-              style={{marginHorizontal: -35}}>
-              {secureTextEntryState ? (
-                <Icon name="eye-outline" size={22} color="black" />
-              ) : (
-                <Icon name="eye-off-outline" size={22} color="black" />
+    <View>
+      <Controller
+        control={control}
+        render={({field, fieldState}) => (
+          <View>
+            <View style={globalStyles.rowContainer}>
+              <TextInput
+                style={globalStyles.inputPrimary}
+                placeholder={placeholder}
+                placeholderTextColor={'#6A6A6A'}
+                secureTextEntry={secureTextEntryState}
+                onChangeText={field.onChange}
+                onBlur={field.onBlur}
+                value={field.value}
+              />
+              {secureTextEntry ? (
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={handleShowHide}
+                  style={{marginHorizontal: -35}}>
+                  {secureTextEntryState ? (
+                    <Icon name="eye-outline" size={22} color="black" />
+                  ) : (
+                    <Icon name="eye-off-outline" size={22} color="black" />
+                  )}
+                </TouchableOpacity>
+              ) : null}
+            </View>
+            <>
+              {fieldState?.error && (
+                <Text
+                  style={{color: 'red', alignSelf: 'stretch', fontSize: 12}}>
+                  {fieldState.error.message}
+                </Text>
               )}
-            </TouchableOpacity>
-          ) : null}
-        </>
-      </View>
-      {error && (
-        <Text
-          style={{
-            color: 'black',
-            alignSelf: 'stretch',
-            fontSize: 12,
-          }}>
-          {error.message}
-        </Text>
-      )}
+            </>
+          </View>
+        )}
+        name={name}
+        rules={rules}
+        defaultValue=""
+      />
     </View>
   );
 };
