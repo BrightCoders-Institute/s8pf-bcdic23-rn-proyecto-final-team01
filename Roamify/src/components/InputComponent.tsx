@@ -2,13 +2,12 @@ import {TextInput, Text, TouchableOpacity, View} from 'react-native';
 import React, {useState} from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {globalStyles} from '../theme/globalStyles';
-import {Controller, FieldError} from 'react-hook-form';
+import {Controller} from 'react-hook-form';
 import {FormFieldProps} from '../../types';
 
 const InputComponent: React.FC<FormFieldProps> = ({
   name,
   placeholder,
-  style,
   secureTextEntry,
   control,
   rules,
