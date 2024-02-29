@@ -51,7 +51,11 @@ const InputComponent: React.FC<FormFieldProps> = ({
             <>
               {fieldState?.error && (
                 <Text
-                  style={{color: 'red', alignSelf: 'stretch', fontSize: 12}}>
+                  style={{
+                    color: 'red',
+                    alignSelf: 'stretch',
+                    fontSize: 12,
+                  }}>
                   {fieldState.error.message}
                 </Text>
               )}

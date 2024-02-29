@@ -1,49 +1,42 @@
-import {StyleSheet, TextInput, View} from 'react-native';
+import {View} from 'react-native';
 import React from 'react';
-import {useNavigation} from '@react-navigation/native';
+import {globalStyles} from '../theme/globalStyles';
 import Header from '../components/Header';
 import NavBar from '../components/NavBar';
-import {globalStyles} from '../theme/globalStyles';
-import Icon from 'react-native-vector-icons/Ionicons';
-import CardComponent from '../components/CardComponent';
+import TextComponent from '../components/TextComponent';
 import BarComponent from '../components/BarComponent';
+import CardComponent from '../components/CardComponent';
 import CardContainer from '../components/CardContainer';
 
-const HomeScreen = () => {
-  const navigation = useNavigation();
-
+const FavoritesScreen = () => {
   return (
     <View style={globalStyles.screen}>
       <Header />
-      <View style={styles.container}>
-        <Icon
-          name="search"
-          color="#6A6A6A"
-          size={25}
-          style={{marginRight: -45}}
-        />
-        <TextInput
-          placeholder="Busca un lugar o evento"
-          placeholderTextColor="#6A6A6A"
-          style={globalStyles.inputSecondary}
-        />
-      </View>
       <BarComponent />
+      <TextComponent
+        text="Tus Favoritos"
+        font="bold"
+        size={25}
+        styles={{paddingLeft: 25}}
+      />
       <CardContainer>
         <CardComponent
           name="La Petatera"
           description="La artesanía más grande del mundo. Tiene un cupo para 6,400 personas entre gradas..."
           image={require('../assets/sample-image.jpg')}
+          favorite
         />
         <CardComponent
           description="lorem"
           name="lorem"
           image={require('../assets/sample-image.jpg')}
+          favorite
         />
         <CardComponent
           description="lorem"
           name="lorem"
           image={require('../assets/sample-image.jpg')}
+          favorite
         />
       </CardContainer>
       <NavBar />
@@ -51,14 +44,4 @@ const HomeScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 15,
-  },
-});
-
-export default HomeScreen;
+export default FavoritesScreen;
