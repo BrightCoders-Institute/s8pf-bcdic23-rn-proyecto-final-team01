@@ -1,20 +1,22 @@
 import {View, StyleSheet, Image, ImageProps} from 'react-native';
 import React from 'react';
 import TextComponent from './TextComponent';
-import BadgeComponent from './BadgeComponent';
-
+import Icon from 'react-native-vector-icons/Ionicons';
 interface Props {
   name: string;
   description: string;
   image: ImageProps;
-  badge: string;
+  favorite?: boolean;
 }
 
 const CardComponent = (props: Props) => {
-  const {name, description, image, badge} = props;
+  const {name, description, image, favorite} = props;
 
   return (
     <View style={styles.cardContainer}>
+      {favorite && (
+        <Icon name="heart" color="red" size={25} style={styles.heartIcon} />
+      )}
       <Image
         source={image}
         style={{width: '100%', height: 150, objectFit: 'cover'}}
@@ -22,7 +24,6 @@ const CardComponent = (props: Props) => {
       <View style={styles.textContainer}>
         <View style={styles.tittleContainer}>
           <TextComponent text={name} font="bold" size={26} />
-          <BadgeComponent text={badge} />
         </View>
         <TextComponent text={description} />
       </View>
@@ -56,6 +57,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  heartIcon: {
+    position: 'absolute',
+    margin: 15,
+    right: 0,
+    zIndex: 10,
   },
 });
 

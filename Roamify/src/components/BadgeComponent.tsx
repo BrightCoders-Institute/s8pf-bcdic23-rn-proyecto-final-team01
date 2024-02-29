@@ -1,32 +1,19 @@
-import {View, Text, StyleSheet} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import React from 'react';
 import TextComponent from './TextComponent';
 
 interface Props {
-  text: string;
-  fontColor?: string;
-  borderColor?: string;
-  backgroundColor?: string;
+  cultural?: boolean;
 }
 
 const BadgeComponent = (props: Props) => {
-  const {text, fontColor, borderColor, backgroundColor} = props;
+  const {cultural} = props;
 
   return (
-    <View
-      style={[
-        {
-          borderColor: borderColor ?? 'black',
-          backgroundColor: backgroundColor ?? '#D9D9D9',
-        },
-        styles.badgeContainer,
-      ]}>
-      <TextComponent
-        text={text}
-        color={fontColor ? fontColor : 'black'}
-        font="bold"
-        size={12}
-      />
+    <View style={[cultural && styles.culturalBadge, styles.badgeContainer]}>
+      {cultural && (
+        <TextComponent text="Cultural" color={'black'} font="bold" size={12} />
+      )}
     </View>
   );
 };
@@ -41,6 +28,10 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  culturalBadge: {
+    borderColor: '#456547',
+    backgroundColor: '#567778',
   },
 });
 
