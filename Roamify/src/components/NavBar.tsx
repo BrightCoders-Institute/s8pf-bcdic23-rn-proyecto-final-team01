@@ -1,29 +1,49 @@
 import {View, StyleSheet} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {globalStyles} from '../theme/globalStyles';
-import TextComponent from './TextComponent';
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import Icon from 'react-native-vector-icons/Ionicons';
+import NavItemComponent from './NavItemComponent';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
 const NavBar = () => {
+  const navigation = useNavigation();
+  const route = useRoute();
+
+  const [active, setActive] = useState('HomeScreen');
+
+  const handleScreen = (text: string) => {
+    setActive(text);
+    /* @ts-ignore */
+    navigation.navigate(text);
+  };
+
   return (
     <View style={[globalStyles.rowContainer, styles.navBarContainer]}>
-      <TouchableOpacity activeOpacity={0.6} style={styles.navItem}>
-        <Icon name="home" color={'#3D5C00'} size={25} />
-        <TextComponent text="Home" color="#3D5C00" size={14} />
-      </TouchableOpacity>
-      <TouchableOpacity activeOpacity={0.6} style={styles.navItem}>
-        <Icon name="add-outline" color={'#3D5C00'} size={25} />
-        <TextComponent text="Mis Eventos" color="#3D5C00" size={14} />
-      </TouchableOpacity>
-      <TouchableOpacity activeOpacity={0.6} style={styles.navItem}>
-        <Icon name="map" color={'#3D5C00'} size={25} />
-        <TextComponent text="Mapa" color="#3D5C00" size={14} />
-      </TouchableOpacity>
-      <TouchableOpacity activeOpacity={0.6} style={styles.navItem}>
-        <Icon name="heart" color={'#3D5C00'} size={25} />
-        <TextComponent text="Favoritos" color="#3D5C00" size={14} />
-      </TouchableOpacity>
+      <NavItemComponent
+        text="Home"
+        icon="home"
+        active={route.name === 'HomeScreen'}
+        onPress={() => handleScreen('HomeScreen')}
+      />
+      <NavItemComponent
+        text="Mis Eventos"
+        icon="add-outline"
+        active={
+          route.name === 'MyEventsScreen' || route.name === 'AddEventScreen'
+        }
+        onPress={() => handleScreen('MyEventsScreen')}
+      />
+      <NavItemComponent
+        text="Mapa"
+        icon="map"
+        active={route.name === 'Mapa'}
+        onPress={() => handleScreen('Mapa')}
+      />
+      <NavItemComponent
+        text="Favoritos"
+        icon="heart"
+        active={route.name === 'FavoritesScreen'}
+        onPress={() => handleScreen('FavoritesScreen')}
+      />
     </View>
   );
 };
@@ -43,10 +63,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 1,
     shadowRadius: 16.0,
     elevation: 24,
-  },
-  navItem: {
-    display: 'flex',
-    alignItems: 'center',
   },
 });
 
