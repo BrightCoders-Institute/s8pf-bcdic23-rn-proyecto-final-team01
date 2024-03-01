@@ -17,11 +17,11 @@ const StackNavigation = () => {
         screenOptions={{
           headerShown: false,
         }}>
+        <Stack.Screen name="AddEventScreen" component={AddEventScreen} />
         <Stack.Screen name="AuthScreen" component={AuthScreen} />
         <Stack.Screen name="HomeScreen" component={HomeScreen} />
         <Stack.Screen name="MyEventsScreen" component={MyEventsScreen} />
         <Stack.Screen name="FavoritesScreen" component={FavoritesScreen} />
-        <Stack.Screen name="AddEventScreen" component={AddEventScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

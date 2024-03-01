@@ -7,14 +7,22 @@ import TextComponent from '../components/TextComponent';
 import ButtonComponent from '../components/ButtonComponent';
 import CardComponent from '../components/CardComponent';
 import CardContainer from '../components/CardContainer';
+import {useNavigation} from '@react-navigation/native';
 
 const MyEventsScreen = () => {
+  const navigation = useNavigation();
+
   return (
     <View style={globalStyles.screen}>
       <Header />
       <View style={styles.eventContainer}>
         <TextComponent text="Crear un evento" font="bold" size={26} />
-        <ButtonComponent text="+" styles={styles.button} />
+        <ButtonComponent
+          text="+"
+          styles={styles.button}
+          /* @ts-ignore */
+          onPress={() => navigation.navigate('AddEventScreen')}
+        />
       </View>
       <CardContainer>
         <TextComponent text="Evento activo" font="bold" size={22} />

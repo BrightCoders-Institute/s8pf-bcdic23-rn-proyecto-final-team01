@@ -16,7 +16,7 @@ const sectionStyle = StyleSheet.create({
     paddingHorizontal: 25,
     display: 'flex',
     flexDirection: 'column',
-    gap: 35,
+    gap: 15,
     justifyContent: 'center',
   },
 });
