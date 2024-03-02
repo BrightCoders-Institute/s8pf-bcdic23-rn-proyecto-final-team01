@@ -8,7 +8,6 @@ import {FormFieldProps} from '../../types';
 const InputComponent: React.FC<FormFieldProps> = ({
   name,
   placeholder,
-  style,
   secureTextEntry,
   control,
   rules,

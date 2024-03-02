@@ -16,7 +16,11 @@ import ButtonComponent from '../components/ButtonComponent';
 import TextComponent from '../components/TextComponent';
 import {FormData} from '../../types';
 import {useForm} from 'react-hook-form';
+import auth from '@react-native-firebase/auth';
+import firebase from '@react-native-firebase/firestore';
 import * as yup from 'yup';
+import LoadingComponent from '../components/LoadingComponent';
+
 
 const schema = yup.object().shape({
   email: yup.string().email().required('El email es requerido'),
@@ -39,12 +43,86 @@ const AuthScreen = () => {
   const imgBackground = require('../assets/background.jpg');
   const logo = require('../assets/logo.jpg');
   const navigation = useNavigation();
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = (email, password) => {
+    setLoading(true);
+    auth()
+      .signInWithEmailAndPassword(email, password)
+      .then(userCredential => {
+        const user = userCredential.user;
+      })
+      .then((userCredential) => {
+        navigation.navigate('HomeScreen');
+      })
+      .catch(error => {
+        if (error.code === 'auth/user-not-found') {
+          setError('email', {
+            type: 'manual',
+            message: 'No hay ningún usuario con este correo electrónico.',
+          });
+        } else if (error.code === 'auth/wrong-password') {
+          setError('password', {
+            type: 'manual',
+            message: 'La contraseña es incorrecta.',
+          });
+        } else {
+          setError('email', {
+            type: 'manual',
+            message: 'Ocurrió un error al intentar iniciar sesión.',
+          });
+        }
+      }).finally(() => {
+        setLoading(false);
+      });
+  };
+
+  const handleRegister = (name, email, password) => {
+    setLoading(true);
+    auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then(userCredential => {
+        const uid = userCredential.user.uid;
+        return firebase()
+          .collection('users')
+          .doc(uid)
+          .set({
+            name: name,
+            email: email,
+          });
+      })
+      .then(() => {
+        navigation.navigate('HomeScreen');
+      })
+      .catch(error => {
+        if (error.code === 'auth/email-already-in-use') {
+          setError('email', {
+            type: 'manual',
+            message: 'El correo electrónico ya está en uso por otra cuenta.',
+          });
+        } else if (error.code === 'auth/weak-password') {
+          setError('password', {
+            type: 'manual',
+            message: 'La contraseña es demasiado débil.',
+          });
+        } else {
+          setError('email', {
+            type: 'manual',
+            message: 'Ocurrió un error al intentar registrar la cuenta.',
+          });
+        }
+      }).finally(() => {
+        setLoading(false);
+      });
+  };
+
 
   const handleVariant = () => {
     setVariant(prevVariant => (prevVariant === 'LOGIN' ? 'REGISTER' : 'LOGIN'));
   };
 
-  const {handleSubmit, setError, control} = useForm<FormData>({
+  const {handleSubmit, setError, control, getValues } = useForm<FormData>({
+
     resolver: async data => {
       try {
         await schema.validate(data, {abortEarly: false});
@@ -70,11 +148,24 @@ const AuthScreen = () => {
   });
 
   const onSubmit = () => {
-    /* @ts-ignore */
-    navigation.navigate('HomeScreen');
+
+    const values = getValues();
+    const { name, email, password } = values;
+    if (variant === 'LOGIN') {
+      handleLogin(email, password);
+    } else {
+      handleRegister(name, email, password);
+    }
+
   };
 
   return (
+    <>
+    {
+      loading && (
+        <LoadingComponent/>
+      )
+    }
     <View style={styles.container}>
       <ImageBackground
         source={imgBackground}
@@ -130,10 +221,11 @@ const AuthScreen = () => {
                 />
               </View>
               <ButtonComponent
-                text={variant === 'LOGIN' ? 'LOGIN' : 'REGISTRARSE'}
-                styles={[globalStyles.buttonPrimary, {marginVertical: 10}]}
-                onPress={handleSubmit(onSubmit)}
-              />
+
+                    text={variant === 'LOGIN' ? 'LOGIN' : 'REGISTRARSE'}
+                    styles={[globalStyles.buttonPrimary, { marginVertical: 10 }]}
+                    onPress={handleSubmit(onSubmit)}
+                  />
             </SectionComponent>
             <View
               style={{
@@ -161,6 +253,7 @@ const AuthScreen = () => {
         </View>
       </ImageBackground>
     </View>
+    </>
   );
 };
 

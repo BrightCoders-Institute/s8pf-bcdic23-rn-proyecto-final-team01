@@ -1,5 +1,3 @@
-import {FieldError, UseFormRegister} from 'react-hook-form';
-
 export type FormData = {
   email: string;
   name: string;
