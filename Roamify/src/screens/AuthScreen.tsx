@@ -21,6 +21,7 @@ import firebase from '@react-native-firebase/firestore';
 import * as yup from 'yup';
 import LoadingComponent from '../components/LoadingComponent';
 
+
 const schema = yup.object().shape({
   email: yup.string().email().required('El email es requerido'),
   name: yup
@@ -115,11 +116,13 @@ const AuthScreen = () => {
       });
   };
 
+
   const handleVariant = () => {
     setVariant(prevVariant => (prevVariant === 'LOGIN' ? 'REGISTER' : 'LOGIN'));
   };
 
   const {handleSubmit, setError, control, getValues } = useForm<FormData>({
+
     resolver: async data => {
       try {
         await schema.validate(data, {abortEarly: false});
@@ -145,6 +148,7 @@ const AuthScreen = () => {
   });
 
   const onSubmit = () => {
+
     const values = getValues();
     const { name, email, password } = values;
     if (variant === 'LOGIN') {
@@ -152,6 +156,7 @@ const AuthScreen = () => {
     } else {
       handleRegister(name, email, password);
     }
+
   };
 
   return (
@@ -216,6 +221,7 @@ const AuthScreen = () => {
                 />
               </View>
               <ButtonComponent
+
                     text={variant === 'LOGIN' ? 'LOGIN' : 'REGISTRARSE'}
                     styles={[globalStyles.buttonPrimary, { marginVertical: 10 }]}
                     onPress={handleSubmit(onSubmit)}

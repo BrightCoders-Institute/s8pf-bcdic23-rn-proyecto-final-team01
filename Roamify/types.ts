@@ -9,8 +9,20 @@ export type FormFieldProps = {
   placeholder: string;
   style: object;
   secureTextEntry?: boolean;
-  rules: object;
+  rules?: object;
   control: any;
+  errors?: any;
+  setValue?: any;
+};
+
+export type InputFileProps = {
+  name: string;
+  placeholder: string;
+  style: object;
+  control: any;
+  errors: any;
+  setValue: any;
+  icon: any;
 };
 
 export type ValidFieldNames = 'email' | 'name' | 'password';
