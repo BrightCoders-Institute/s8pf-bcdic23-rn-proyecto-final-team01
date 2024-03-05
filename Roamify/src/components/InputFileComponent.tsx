@@ -5,6 +5,7 @@ import {Controller} from 'react-hook-form';
 import {InputFileProps} from '../../types';
 import DocumentPicker from 'react-native-document-picker';
 import TextComponent from './TextComponent';
+import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const InputFileComponent: React.FC<InputFileProps> = ({
@@ -17,8 +18,14 @@ const InputFileComponent: React.FC<InputFileProps> = ({
   icon,
 }) => {
   const [nameFile, setNameFile] = useState(placeholder);
+  const navigation = useNavigation();
+
 
   const onFileSelect = async () => {
+    if (name === 'map') {
+      navigation.navigate('GoogleMapComponent');
+      return;
+    }
     try {
       const result = await DocumentPicker.pick({
         type: [DocumentPicker.types.allFiles],
