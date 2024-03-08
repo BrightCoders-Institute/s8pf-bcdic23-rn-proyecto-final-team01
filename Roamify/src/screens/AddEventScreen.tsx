@@ -1,5 +1,5 @@
 import {View, Text} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import Header from '../components/Header';
 import NavBar from '../components/NavBar';
 import LabelComponent from '../components/LabelComponent';
@@ -11,6 +11,7 @@ import TextComponent from '../components/TextComponent';
 import CardContainer from '../components/CardContainer';
 
 const AddEventScreen = () => {
+  const [location, setLocation] = useState<{ latitude: number, longitude: number } | null>(null);
   return (
     <View style={globalStyles.screen}>
       <Header />
@@ -18,7 +19,7 @@ const AddEventScreen = () => {
         <TextComponent text="Crear un evento" font="bold" size={26} />
       </View>
       <CardContainer>
-        <FormAddEvent />
+        <FormAddEvent location={location} setLocation={setLocation}/>
       </CardContainer>
     </View>
   );
