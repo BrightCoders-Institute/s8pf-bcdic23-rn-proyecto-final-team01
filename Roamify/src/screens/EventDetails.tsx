@@ -1,81 +1,98 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, StatusBar } from 'react-native';
+import { View, Image, StyleSheet, ScrollView} from 'react-native';
 import TextComponent from '../components/TextComponent';
 import ReviewComponent from '../components/ReviewComponent';
-import Icon from 'react-native-vector-icons/Ionicons';
+import Icon from 'react-native-vector-icons/Ionicons'
+import FabComponent from '../components/FabComponent';
 import GoogleMapComponent from '../components/googlemaps/GoogleMapComponent';
+import { PropsNavigator } from '../navigation/Navigation';
 
 
-const EventDetails = () => {
+const EventDetails = ({navigation}: PropsNavigator) => {
+  
   return (
-    <View style={styles.container}>
-      <Image
-        source={require('../assets/sample-image.jpg')}
-        style={styles.image}
-        resizeMode="cover"
+    <ScrollView>
+      <FabComponent
+        iconName="chevron-back"
+        iconSize={30}
+        iconColor="#606eee"
+        onPress={() => navigation.navigate('HomeScreen')}
+        styles={{top: 10, left: 16}}
       />
-      <View style={styles.detailsContainer}>
-        <TextComponent
-            text="La petatera"
-            font="bold"
-            size={30}
-            styles={{paddingTop: 15}}
-        />
-        <View style={styles.locationContainer}>
-            <Icon name="location" color="#A8BD29" size={22}/>
-            <TextComponent
-                text="Evento Social"
-                font="normal"
-                size={16}
-            />
-        </View>
-        <View style={styles.locationContainer}>
-            <Icon name="calendar" color="#A8BD29" size={22} />
-            <TextComponent
-                text="Fecha 08 de febrero al 17 de febrero"
-                font="normal"
-                size={16}
-            />
-        </View>
-        <View style={styles.locationContainer}>
-            <Icon name="time" color="#A8BD29" size={22} />
-            <TextComponent
-                text="Horarios de 10am a 2am"
-                font="normal"
-                size={16}
-            />
-        </View>
-        <View style={styles.locationContainer}>
-            <TextComponent text=" $ " font="bold" color="#A8BD29" size={22} />
-            <TextComponent
-                text="Costo de entrada: $50"
-                font="normal"
-                size={16}
-            />
-        </View>
-        <TextComponent
-            text="La artesanía más grande del mundo. Tiene un cupo para 6400 personas entre gradas, plateas y bajos"
-            font="normal"
-            size={16}
-            styles={{paddingTop: 15}}
-        />
-      </View>
-      <View style={styles.detailsContainer}>
-        {/* <GoogleMapComponent /> */}
+      <View style={styles.container}>
         <Image
-        source={require('../assets/map.jpg')} 
-        style={styles.image}
-        resizeMode="cover"
+          source={require('../assets/sample-image.jpg')}
+          style={styles.image}
+          resizeMode="cover"
         />
-      </View>
-      <View style={styles.review}>
-        <ReviewComponent
-            image={require('../assets/user.jpg')} 
-            userName="Nombre del usuario"
-            userReview="Reseña del usuario"
-        />
+        <View style={styles.detailsContainer}>
+          <TextComponent
+              text="La petatera"
+              font="bold"
+              size={30}
+              styles={{paddingTop: 15}}
+          />
+          <View style={styles.locationContainer}>
+              <Icon name="location" color="#A8BD29" size={22}/>
+              <TextComponent
+                  text="Evento Social"
+                  font="normal"
+                  size={16}
+              />
+          </View>
+          <View style={styles.locationContainer}>
+              <Icon name="calendar" color="#A8BD29" size={22} />
+              <TextComponent
+                  text="Fecha 08 de febrero al 17 de febrero"
+                  font="normal"
+                  size={16}
+              />
+          </View>
+          <View style={styles.locationContainer}>
+              <Icon name="time" color="#A8BD29" size={22} />
+              <TextComponent
+                  text="Horarios de 10am a 2am"
+                  font="normal"
+                  size={16}
+              />
+          </View>
+          <View style={styles.locationContainer}>
+              <TextComponent text=" $ " font="bold" color="#A8BD29" size={22} />
+              <TextComponent
+                  text="Costo de entrada: $50"
+                  font="normal"
+                  size={16}
+              />
+          </View>
+          <TextComponent
+              text="La artesanía más grande del mundo. Tiene un cupo para 6400 personas entre gradas, plateas y bajos"
+              font="normal"
+              size={16}
+              styles={{paddingTop: 15}}
+          />
         </View>
-    </View>
+        <View style={styles.detailsContainer}>
+          {/* <GoogleMapComponent /> */}
+          <Image
+          source={require('../assets/map.jpg')} 
+          style={styles.image}
+          resizeMode="cover"
+          />
+        </View>
+        <View style={styles.review}>
+          <ReviewComponent
+              image={require('../assets/user.jpg')} 
+              userName="Nombre del usuario"
+              userReview="Reseña del usuario"
+          />
+          <ReviewComponent
+              image={require('../assets/user.jpg')} 
+              userName="Nombre del usuario"
+              userReview="Reseña del usuario"
+          />
+          </View>
+      </View>
+    </ScrollView>
   );
 };
 
