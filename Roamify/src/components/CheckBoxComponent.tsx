@@ -17,7 +17,9 @@ const CheckBoxComponent = (props: Props) => {
       textStyle={{textDecorationLine: 'none', color: '#B6B7BA'}}
       iconStyle={{borderRadius: 0, marginVertical: 10}}
       innerIconStyle={{borderRadius: 5}}
-      onPress={(isChecked: boolean) => {}}
+      onPress={(isChecked: boolean) => {
+        console.log(isChecked);
+      }}
     />
   );
 };

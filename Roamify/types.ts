@@ -17,12 +17,14 @@ export type FormFieldProps = {
 
 export type InputFileProps = {
   name: string;
-  placeholder: string;
+  placeholder?: string;
   style: object;
   control: any;
   errors: any;
   setValue: any;
   icon: any;
+  location?: any;
+  setLocation?: any;
 };
 
 export type ValidFieldNames = 'email' | 'name' | 'password';

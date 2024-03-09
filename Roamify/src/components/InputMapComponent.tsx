@@ -1,5 +1,5 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {globalStyles} from '../theme/globalStyles';
 import {Controller} from 'react-hook-form';
 import {InputFileProps} from '../../types';
@@ -8,9 +8,8 @@ import TextComponent from './TextComponent';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const InputFileComponent: React.FC<InputFileProps> = ({
+const InputMapComponent: React.FC<InputFileProps> = ({
   name,
-  placeholder,
   style,
   control,
   errors,
@@ -19,29 +18,23 @@ const InputFileComponent: React.FC<InputFileProps> = ({
   location,
   setLocation,
 }) => {
-  const [nameFile, setNameFile] = useState(placeholder);
+  const [nameFile, setNameFile] = useState<string | null>(null);
   const navigation = useNavigation();
+
+  useEffect(() => {
+    if (location == null) {
+      setNameFile('Seleccionar ubicación');
+    } else {
+      setNameFile('Se guardo la ubicación');
+    }
+    setValue('map', location);
+  }, [location]);
 
   const onFileSelect = async () => {
     if (name === 'map') {
       /* @ts-ignore */
       navigation.navigate('GoogleMapComponent', {location, setLocation});
       return;
-    }
-    try {
-      const result = await DocumentPicker.pick({
-        type: [DocumentPicker.types.allFiles],
-      });
-      setValue('file', result);
-      /* @ts-ignore */
-      setNameFile(result[0].name);
-    } catch (err) {
-      setNameFile(placeholder);
-      if (DocumentPicker.isCancel(err)) {
-        console.log('User cancelled the file selection');
-      } else {
-        console.error(`Error picking file: ${err}`);
-      }
     }
   };
 
@@ -56,7 +49,7 @@ const InputFileComponent: React.FC<InputFileProps> = ({
         <View style={[style, {paddingVertical: 10}]}>
           <Controller
             control={control}
-            render={() => (
+            render={e => (
               <TouchableOpacity onPress={onFileSelect}>
                 <TextComponent text={nameFile} color="#6A6A6A" size={14} />
               </TouchableOpacity>
@@ -67,11 +60,6 @@ const InputFileComponent: React.FC<InputFileProps> = ({
         </View>
         {name === 'map' && errors.map && (
           <Text style={{color: 'red', fontSize: 12}}>{errors.map.message}</Text>
-        )}
-        {name === 'photoEvent' && errors.file && (
-          <Text style={{color: 'red', fontSize: 12}}>
-            {errors.file.message}
-          </Text>
         )}
       </View>
       <View style={styles.iconContainer}>
@@ -99,4 +87,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default InputFileComponent;
+export default InputMapComponent;
