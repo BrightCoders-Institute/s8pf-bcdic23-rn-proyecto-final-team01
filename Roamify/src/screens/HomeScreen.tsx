@@ -1,4 +1,4 @@
-import {StyleSheet, TextInput, View, TouchableOpacity} from 'react-native';
+import {StyleSheet, TextInput, View, TouchableOpacity } from 'react-native';
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import Header from '../components/Header';
@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import CardComponent from '../components/CardComponent';
 import BarComponent from '../components/BarComponent';
 import CardContainer from '../components/CardContainer';
+import FlatListComponent from '../components/FlatListComponent';
 
 
 const HomeScreen = () => {
@@ -34,24 +35,9 @@ const HomeScreen = () => {
         />
       </View>
       <BarComponent />
+
       <CardContainer>
-      <TouchableOpacity onPress={handleCardPress}>
-          <CardComponent
-            name="La Petatera"
-            description="La artesanía más grande del mundo. Tiene un cupo para 6,400 personas entre gradas..."
-            image={require('../assets/sample-image.jpg')}
-          />
-        </TouchableOpacity>
-        <CardComponent
-          description="lorem"
-          name="lorem"
-          image={require('../assets/sample-image.jpg')}
-        />
-        <CardComponent
-          description="lorem"
-          name="lorem"
-          image={require('../assets/sample-image.jpg')}
-        />
+      <FlatListComponent/>
       </CardContainer>
       <NavBar />
     </View>
