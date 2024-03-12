@@ -19,7 +19,7 @@ const schemaAddEvent = yup.object().shape({
   text: yup.string().required('Text is required'),
 });
 
-const FormAddEvent = ({ location, setLocation }) => {
+const FormAddEvent = () => {
   const {
     control,
     handleSubmit,
@@ -65,8 +65,6 @@ const FormAddEvent = ({ location, setLocation }) => {
         errors={errors}
         name="map"
         icon="location"
-        location={location}
-        setLocation={setLocation}
       />
       <TextComponent text="Descripción del evento" />
       <InputComponent

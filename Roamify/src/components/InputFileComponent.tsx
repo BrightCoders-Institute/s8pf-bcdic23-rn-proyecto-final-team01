@@ -16,8 +16,6 @@ const InputFileComponent: React.FC<InputFileProps> = ({
   errors,
   setValue,
   icon,
-  location,
-  setLocation,
 }) => {
   const [nameFile, setNameFile] = useState(placeholder);
   const navigation = useNavigation();
@@ -25,7 +23,7 @@ const InputFileComponent: React.FC<InputFileProps> = ({
 
   const onFileSelect = async () => {
     if (name === 'map') {
-      navigation.navigate('GoogleMapComponent', { location, setLocation });
+      navigation.navigate('GoogleMapComponent');
       return;
     }
     try {

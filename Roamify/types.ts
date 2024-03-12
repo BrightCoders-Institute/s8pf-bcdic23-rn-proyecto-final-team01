@@ -23,8 +23,6 @@ export type InputFileProps = {
   errors: any;
   setValue: any;
   icon: any;
-  location: any;
-  setLocation: any;
 };
 
 export type ValidFieldNames = 'email' | 'name' | 'password';
