@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useMemo} from 'react';
 import {
   View,
   Text,
@@ -11,6 +11,7 @@ import {useNavigation} from '@react-navigation/native';
 import InputComponent from '../components/InputComponent';
 import {globalStyles} from '../theme/globalStyles';
 import LabelComponent from '../components/LabelComponent';
+import { yupResolver } from '@hookform/resolvers/yup';
 import SectionComponent from '../components/SectionComponent';
 import ButtonComponent from '../components/ButtonComponent';
 import TextComponent from '../components/TextComponent';
@@ -22,28 +23,43 @@ import * as yup from 'yup';
 import LoadingComponent from '../components/LoadingComponent';
 
 
-const schema = yup.object().shape({
-  email: yup.string().email().required('El email es requerido'),
-  name: yup
-    .string()
-    .min(3, 'El nombre debe tener al menos 3 caracteres')
-    .max(70, 'El nombre debe tener máximo 70 caracteres')
-    .required('El nombre es requerido'),
-  password: yup
-    .string()
-    .min(6, 'La contraseña debe tener al menos 6 caracteres')
-    .max(12, 'La contraseña debe tener máximo 12 caracteres')
-    .required('La contraseña es requerida'),
-});
+// const schema = yup.object().shape({
+//   email: yup.string().email().required('El email es requerido'),
+//   name: yup
+//     .string()
+//     .min(3, 'El nombre debe tener al menos 3 caracteres')
+//     .max(70, 'El nombre debe tener máximo 70 caracteres')
+//     .required('El nombre es requerido'),
+//   password: yup
+//     .string()
+//     .min(6, 'La contraseña debe tener al menos 6 caracteres')
+//     .max(12, 'La contraseña debe tener máximo 12 caracteres')
+//     .required('La contraseña es requerida'),
+// });
 
-type variant = 'LOGIN' | 'REGISTER';
+// type variant = 'LOGIN' | 'REGISTER';
 
 const AuthScreen = () => {
-  const [variant, setVariant] = useState<variant>('LOGIN');
+  const [variant, setVariant] = useState<'LOGIN' | 'REGISTER'>('LOGIN');
   const imgBackground = require('../assets/background.jpg');
   const logo = require('../assets/logo.jpg');
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
+
+  const schema = useMemo(() => yup.object().shape({
+    email: yup.string().email().required('El email es requerido'),
+    name: variant === 'REGISTER' ? yup
+      .string()
+      .min(3, 'El nombre debe tener al menos 3 caracteres')
+      .max(70, 'El nombre debe tener máximo 70 caracteres')
+      .required('El nombre es requerido') : yup.string(),
+    password: yup
+      .string()
+      .min(6, 'La contraseña debe tener al menos 6 caracteres')
+      .max(12, 'La contraseña debe tener máximo 12 caracteres')
+      .required('La contraseña es requerida'),
+  }), [variant]);
+  
 
   const handleLogin = (email, password) => {
     setLoading(true);

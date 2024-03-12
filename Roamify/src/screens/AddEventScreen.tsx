@@ -20,7 +20,6 @@ const AddEventScreen = () => {
       <CardContainer>
         <FormAddEvent />
       </CardContainer>
-      <NavBar />
     </View>
   );
 };
