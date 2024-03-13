@@ -1,17 +1,8 @@
-import React, {useState} from 'react';
-import {
-  FlatList,
-  SafeAreaView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-} from 'react-native';
-
+import React, { useState } from 'react';
+import { FlatList, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import CardComponent from './CardComponent';
 import DATA from '../API/EventsData';
-import {useNavigation} from '@react-navigation/native';
-
+import { useNavigation } from '@react-navigation/native';
 
 type ItemData = {
   id: string;
@@ -27,13 +18,13 @@ type ItemProps = {
   textColor: string;
 };
 
-const Item = ({item, onPress, backgroundColor, textColor}: ItemProps) => (
-  <TouchableOpacity onPress={onPress} style={[styles.item, {backgroundColor}]}>
+const Item = ({ item, onPress, backgroundColor, textColor }: ItemProps) => (
+  <TouchableOpacity onPress={onPress} style={[styles.item, { backgroundColor }]}>
     <CardComponent
-            name={item.title}
-            description={item.description}
-            image={item.sample}
-          />
+      name={item.title}
+      description={item.description}
+      image={item.sample}
+    />
   </TouchableOpacity>
 );
 
@@ -41,7 +32,7 @@ const FlatListComponent = () => {
   const [selectedId, setSelectedId] = useState<string>();
   const navigation = useNavigation();
 
-  const renderItem = ({item}: {item: ItemData}) => {
+  const renderItem = ({ item }: { item: ItemData }) => {
     const backgroundColor = item.id === selectedId ? 'white' : 'white';
     const color = item.id === selectedId ? 'white' : 'white';
 
@@ -56,7 +47,7 @@ const FlatListComponent = () => {
   };
 
   return (
-    <SafeAreaView >
+    <SafeAreaView style={styles.container}>
       <FlatList
         data={DATA}
         renderItem={renderItem}
@@ -70,7 +61,10 @@ const FlatListComponent = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
+    padding: 10,
+    display: 'flex',
+    flexDirection: 'column',
+    
   },
   item: {
     padding: 5,

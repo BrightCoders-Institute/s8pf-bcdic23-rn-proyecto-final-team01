@@ -36,9 +36,7 @@ const HomeScreen = () => {
       </View>
       <BarComponent />
 
-      <CardContainer>
       <FlatListComponent/>
-      </CardContainer>
       <NavBar />
     </View>
   );
