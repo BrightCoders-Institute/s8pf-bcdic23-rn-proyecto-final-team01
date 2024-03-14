@@ -1,8 +1,9 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback } from 'react';
 import { View, Button, StyleSheet } from 'react-native';
 import * as ImagePicker from 'react-native-image-picker';
-import { uploadImageStorange } from '.';
-import { ActionImagePicker, ImageResponse } from './types';
+import { updateDataUser, uploadImageStorange } from '.';
+import { ActionImagePicker, ImageInputProps, ImageResponse } from './types';
+import { useAuth } from '../contexts/AuthContext';
 
 const actions: ActionImagePicker[] = [
     {
@@ -10,7 +11,7 @@ const actions: ActionImagePicker[] = [
         type: 'library',
         options: {
             quality: 0.5,
-            selectionLimit: 0,
+            selectionLimit: 1,
             mediaType: 'photo',
             includeBase64: false,
             includeExtra: true,
@@ -18,37 +19,34 @@ const actions: ActionImagePicker[] = [
     },
 ];
 
-const ImageInput = () => {
-    const [response, setResponse] = useState<ImageResponse | null>(null);
+const ImageInput = ({ setIsLoading }: ImageInputProps) => {
+    const { userId } = useAuth();
 
-    const submitImage = useCallback(
-        (type: string, options: ImagePicker.ImageLibraryOptions) => {
-            if (type === 'library') {
-                ImagePicker.launchImageLibrary(options, setResponse);
-            }
-        }, []);
-
-    useEffect(() => {
-        if (!response) {
-            console.log("Elige una imagen");
-            return;
-        } else {
-            const data = uploadImageStorange({
-                uri: response?.assets[0].uri, route: "profileImage"
-            })
-            setResponse(null)
-            console.log('data', data);
+    const handleImageUpload = useCallback(async () => {
+        try {
+            const options = actions[0].options;
+            const imageResponse = await ImagePicker.launchImageLibrary(options);
+            setIsLoading(true);
+            const uploadedImageData = await uploadImageStorange({
+                uri: imageResponse.assets[0].uri,
+                route: "profileImage"
+            });
+            const data = { profileImgURL: uploadedImageData }
+            await updateDataUser({ userId, data });
+            console.log('Image uploaded successfully');
+        } catch (error) {
+            console.error('Error handling image upload:', error);
+        } finally {
+            setIsLoading(false);
         }
-    }, [response])
+    }, [userId]);
 
     return (
         <View>
             <View>
                 <Button
                     title="Selecciona y guarda una imagen"
-                    onPress={
-                        () => submitImage(actions[0].type, actions[0].options)
-                    }
+                    onPress={handleImageUpload}
                 />
             </View>
         </View>

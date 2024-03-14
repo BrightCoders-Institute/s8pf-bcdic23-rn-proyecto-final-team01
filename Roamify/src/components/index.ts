@@ -1,13 +1,16 @@
 import storage from '@react-native-firebase/storage';
-import { ImageStorageProp } from './types';
+import firestore from '@react-native-firebase/firestore';
+import { ImageStorageProp, ResquestUpdateUser } from './types';
 
-export const uploadImageStorange = async ({ uri, route }: ImageStorageProp): Promise<string> => {
+export const uploadImageStorange = async (
+    { uri, route }: ImageStorageProp
+): Promise<string> => {
     try {
         if (!uri) {
             console.log(
                 'No image selected', 'Please select an image before uploading'
-                );
-            return "Error: Selecciona una imagen porfavor";
+            );
+            console.log("Error: Selecciona una imagen porfavor");
         }
         const newName = createRadomName()
         const reference = storage().ref(`${route}/${newName}`);
@@ -18,7 +21,7 @@ export const uploadImageStorange = async ({ uri, route }: ImageStorageProp): Pro
         return url
     } catch (error) {
         console.error('Error uploading image:', error);
-        return 'Error: An error occurred while uploading the image';
+        console.log('Error: An error occurred while uploading the image');
     }
 };
 
@@ -35,3 +38,15 @@ export const createRadomName = (): string => {
     let name = `${randomstring}+${date}`
     return name;
 }
+
+export const updateDataUser = async (
+    { userId, data }: ResquestUpdateUser
+) => {
+    try {
+        const userRef = firestore().collection('users').doc(userId);
+        await userRef.update(data);
+        console.log('Documento actualizado exitosamente');
+    } catch (error) {
+        console.error('Error al actualizar el documento:', error);
+    }
+};
