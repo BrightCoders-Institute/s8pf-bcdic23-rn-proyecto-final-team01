@@ -24,9 +24,12 @@ const AddEventScreen = () => {
           <TextComponent text="Crear un evento" font="bold" size={26} />
         </View>
         <CardContainer>
-          <FormAddEvent location={location} setLocation={setLocation} />
+          <FormAddEvent
+            location={location}
+            setLocation={setLocation}
+            setIsLoading={setIsLoading}
+          />
         </CardContainer>
-        {/* <NavBar /> */}
       </View>
     </>
   );
