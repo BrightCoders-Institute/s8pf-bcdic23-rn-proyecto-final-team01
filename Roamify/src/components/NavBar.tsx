@@ -35,8 +35,8 @@ const NavBar = () => {
       <NavItemComponent
         text="Mapa"
         icon="map"
-        active={route.name === 'Mapa'}
-        onPress={() => handleScreen('Mapa')}
+        active={route.name === 'MapScreen'}
+        onPress={() => handleScreen('MapScreen')}
       />
       <NavItemComponent
         text="Favoritos"

@@ -1,4 +1,4 @@
-import {StyleSheet, TextInput, View} from 'react-native';
+import {StyleSheet, TextInput, View, TouchableOpacity} from 'react-native';
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import Header from '../components/Header';
@@ -9,8 +9,13 @@ import CardComponent from '../components/CardComponent';
 import BarComponent from '../components/BarComponent';
 import CardContainer from '../components/CardContainer';
 
+
 const HomeScreen = () => {
   const navigation = useNavigation();
+
+  const handleCardPress = () => {
+    navigation.navigate('EventDetails'); 
+  };
 
   return (
     <View style={globalStyles.screen}>
@@ -30,11 +35,13 @@ const HomeScreen = () => {
       </View>
       <BarComponent />
       <CardContainer>
-        <CardComponent
-          name="La Petatera"
-          description="La artesanía más grande del mundo. Tiene un cupo para 6,400 personas entre gradas..."
-          image={require('../assets/sample-image.jpg')}
-        />
+      <TouchableOpacity onPress={handleCardPress}>
+          <CardComponent
+            name="La Petatera"
+            description="La artesanía más grande del mundo. Tiene un cupo para 6,400 personas entre gradas..."
+            image={require('../assets/sample-image.jpg')}
+          />
+        </TouchableOpacity>
         <CardComponent
           description="lorem"
           name="lorem"
