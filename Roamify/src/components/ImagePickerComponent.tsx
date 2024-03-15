@@ -1,23 +1,24 @@
-import {View, StyleSheet, Button, Image} from 'react-native';
-import React, {useState} from 'react';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import React, {useState, useCallback} from 'react';
+import {View, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import TextComponent from './TextComponent';
 import * as ImagePicker from 'react-native-image-picker';
 import {globalStyles} from '../theme/globalStyles';
 import storage from '@react-native-firebase/storage';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ButtonComponent from './ButtonComponent';
-
-const ImagePickerComponent = ({errors, setDownloadLink}) => {
-  const [response, setResponse] = React.useState<any>(null);
-  const [link, setLink] = useState<any>(null);
+/* @ts-ignore */
+const ImagePickerComponent = ({setDownloadLink}) => {
+  const [response, setResponse] = useState(null);
+  const [link, setLink] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const onGalleryPress = React.useCallback(options => {
+  const onGalleryPress = useCallback(() => {
+    /* @ts-ignore */
     ImagePicker.launchImageLibrary(options, setResponse);
   }, []);
 
-  const onCameraPress = React.useCallback(options => {
+  const onCameraPress = useCallback(() => {
+    /* @ts-ignore */
     ImagePicker.launchCamera(options, setResponse);
   }, []);
 
@@ -31,12 +32,14 @@ const ImagePickerComponent = ({errors, setDownloadLink}) => {
         );
         return;
       }
+      /* @ts-ignore */
       const {uri, fileName} = response.assets[0];
       const reference = storage().ref(`images/${fileName}`);
       await reference.putFile(uri);
-      const link = await reference.getDownloadURL();
-      setLink(link);
-      setDownloadLink(link);
+      const downloadURL = await reference.getDownloadURL();
+      /* @ts-ignore */
+      setLink(downloadURL);
+      setDownloadLink(downloadURL);
     } catch (error) {
       console.error('Error uploading image:', error);
       console.log('Error', 'An error occurred while uploading the image');
@@ -44,39 +47,43 @@ const ImagePickerComponent = ({errors, setDownloadLink}) => {
       setIsLoading(false);
     }
   };
+  /* @ts-ignore */
+  const renderButton = (text, onPress, styles) => (
+    <ButtonComponent text={text} onPress={onPress} styles={styles} />
+  );
+  const renderImages = () => {
+    /* @ts-ignore */
+    if (!response || !response.assets) return null;
+    /* @ts-ignore */
+    return response.assets.map(({uri}) => (
+      <View key={uri} style={styles.imageContainer}>
+        <Image
+          resizeMode="cover"
+          resizeMethod="scale"
+          style={styles.image}
+          source={{uri}}
+        />
+      </View>
+    ));
+  };
 
   return (
     <View style={styles.container}>
       <View
-        style={[styles.btnContainer, response != null && {display: 'none'}]}>
-        <ButtonComponent
-          text="Galería"
-          onPress={() => onGalleryPress(options)}
-          styles={styles.galleryButton}
-          disabled={response != null}
-        />
-        <ButtonComponent
-          text="Cámara"
-          onPress={() => onCameraPress(options)}
-          styles={styles.cameraButton}
-          disabled={response != null}
-        />
+        style={[
+          styles.btnContainer,
+          /* @ts-ignore */
+          response && response.assets && {display: 'none'},
+        ]}>
+        {renderButton('Galería', onGalleryPress, styles.galleryButton)}
+        {renderButton('Cámara', onCameraPress, styles.cameraButton)}
       </View>
       <View>
-        {response?.assets &&
-          response?.assets.map(({uri}: {uri: string}) => (
-            <View key={uri} style={styles.imageContainer}>
-              <Image
-                resizeMode="cover"
-                resizeMethod="scale"
-                style={styles.image}
-                source={{uri: uri}}
-              />
-            </View>
-          ))}
-        {response != null && link === null && (
+        {renderImages()}
+        {/* @ts-ignore */}
+        {response && response.assets && (
           <TouchableOpacity
-            style={globalStyles.buttonPrimary}
+            style={[globalStyles.buttonPrimary, link && {display: 'none'}]}
             onPress={uploadImage}>
             <TextComponent
               text={isLoading ? 'Subiendo...' : 'Seleccionar y guardar'}
@@ -85,7 +92,7 @@ const ImagePickerComponent = ({errors, setDownloadLink}) => {
             />
           </TouchableOpacity>
         )}
-        {link != null && (
+        {link && (
           <View style={styles.messageContainer}>
             <TextComponent
               text="Imagen Guardada"
@@ -96,21 +103,17 @@ const ImagePickerComponent = ({errors, setDownloadLink}) => {
             <Icon name="checkmark-circle" color="green" size={25} />
           </View>
         )}
-        {errors?.image && (
-          <TextComponent text={errors.image.message} color="red" />
-        )}
       </View>
     </View>
   );
 };
 
-const includeExtra = true;
 const options = {
   quality: 0.7,
   selectionLimit: 1,
   mediaType: 'photo',
   includeBase64: false,
-  includeExtra,
+  includeExtra: true,
 };
 
 const styles = StyleSheet.create({
