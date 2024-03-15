@@ -84,9 +84,7 @@ const FormAddEvent = ({location, setLocation, setIsLoading}) => {
     } catch (error: any) {
       console.error('Error: ', error);
     } finally {
-      setTimeout(() => {
         setIsLoading(false);
-      }, 1000);
     }
   };
 
