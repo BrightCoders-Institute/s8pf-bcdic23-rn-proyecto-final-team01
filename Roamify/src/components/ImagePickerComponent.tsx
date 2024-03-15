@@ -1,11 +1,4 @@
-import {
-  View,
-  StyleSheet,
-  Button,
-  Image,
-  StyleProp,
-  ViewStyle,
-} from 'react-native';
+import {View, StyleSheet, Image} from 'react-native';
 import React, {useState} from 'react';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import TextComponent from './TextComponent';
@@ -14,19 +7,29 @@ import {globalStyles} from '../theme/globalStyles';
 import storage from '@react-native-firebase/storage';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ButtonComponent from './ButtonComponent';
-import {object} from 'yup';
+
+const buttons = [
+  {
+    id: 1,
+    type: 'gallery',
+    text: 'Galería',
+  },
+  {
+    id: 2,
+    type: 'camera',
+    text: 'Cámara',
+  },
+];
 
 const ImagePickerComponent = ({setDownloadLink}) => {
   const [response, setResponse] = React.useState<any>(null);
   const [link, setLink] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const onGalleryPress = React.useCallback(options => {
-    ImagePicker.launchImageLibrary(options, setResponse);
-  }, []);
-
-  const onCameraPress = React.useCallback(options => {
-    ImagePicker.launchCamera(options, setResponse);
+  const onButtonPress = React.useCallback((type, options) => {
+    type === 'gallery'
+      ? ImagePicker.launchImageLibrary(options, setResponse)
+      : ImagePicker.launchCamera(options, setResponse);
   }, []);
 
   const uploadImage = async () => {
@@ -53,12 +56,6 @@ const ImagePickerComponent = ({setDownloadLink}) => {
     }
   };
 
-  const renderButton = (
-    text: string,
-    onPress: () => void,
-    styles: StyleProp<ViewStyle>,
-  ) => <ButtonComponent text={text} onPress={onPress} styles={styles} />;
-
   return (
     <View style={styles.container}>
       <View
@@ -67,16 +64,18 @@ const ImagePickerComponent = ({setDownloadLink}) => {
           response != null &&
             response?.assets != undefined && {display: 'none'},
         ]}>
-        {renderButton(
-          'Galería',
-          () => onGalleryPress(options),
-          styles.galleryButton,
-        )}
-        {renderButton(
-          'Cámara',
-          () => onCameraPress(options),
-          styles.cameraButton,
-        )}
+        {buttons.map(button => (
+          <ButtonComponent
+            key={button.id}
+            text={button.text}
+            onPress={() => onButtonPress(button.type, options)}
+            styles={
+              button.type === 'gallery'
+                ? styles.galleryButton
+                : styles.cameraButton
+            }
+          />
+        ))}
       </View>
       <View>
         {response?.assets &&
@@ -93,7 +92,8 @@ const ImagePickerComponent = ({setDownloadLink}) => {
         {response != null && response?.assets != undefined && (
           <TouchableOpacity
             style={[globalStyles.buttonPrimary, link && {display: 'none'}]}
-            onPress={uploadImage}>
+            onPress={uploadImage}
+            disabled={isLoading}>
             <TextComponent
               text={isLoading ? 'Subiendo...' : 'Seleccionar y guardar'}
               font="bold"
