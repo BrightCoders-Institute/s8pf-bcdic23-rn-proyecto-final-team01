@@ -1,8 +1,8 @@
 import React, { useCallback } from 'react';
-import { View, Button, StyleSheet } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text, Image } from 'react-native';
 import * as ImagePicker from 'react-native-image-picker';
 import { updateDataUser, uploadImageStorange } from '.';
-import { ActionImagePicker, ImageInputProps, ImageResponse } from './types';
+import { ActionImagePicker, ImageInputProps } from './types';
 import { useAuth } from '../contexts/AuthContext';
 
 const actions: ActionImagePicker[] = [
@@ -19,7 +19,7 @@ const actions: ActionImagePicker[] = [
     },
 ];
 
-const ImageInput = ({ setIsLoading }: ImageInputProps) => {
+const ImageWithButton = ({ setIsLoading }: ImageInputProps) => {
     const { userId } = useAuth();
 
     const handleImageUpload = useCallback(async () => {
@@ -35,29 +35,50 @@ const ImageInput = ({ setIsLoading }: ImageInputProps) => {
             await updateDataUser({ userId, data });
             console.log('Image uploaded successfully');
         } catch (error) {
-            console.error('Error handling image upload:', error);
+            // console.error('Error handling image upload:', error);
+            return
         } finally {
             setIsLoading(false);
         }
     }, [userId]);
 
     return (
-        <View>
-            <View>
-                <Button
-                    title="Selecciona y guarda una imagen"
-                    onPress={handleImageUpload}
-                />
-            </View>
+        <View style={styles.container}>
+            <Image source={require('../assets/user.jpg')} style={styles.image} />
+            <TouchableOpacity onPress={handleImageUpload} style={styles.button}>
+                <Text style={styles.textBtn}>+</Text>
+            </TouchableOpacity>
         </View>
     );
 };
 
-export default ImageInput;
-
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: 'aliceblue',
+        position: 'relative',
+        alignItems: 'center',
     },
+    image: {
+        width: 100,
+        height: 100,
+        borderRadius: 100,
+        borderWidth: 2,
+        borderColor: '#000'
+    },
+    button: {
+        position: 'absolute',
+        top: 60,
+        right: 120,
+        backgroundColor: 'blue',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+    },
+    textBtn: {
+        color: 'white',
+        fontSize: 30,
+    }
 });
+
+export default ImageWithButton;
