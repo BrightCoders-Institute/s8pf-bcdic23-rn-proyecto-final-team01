@@ -60,7 +60,6 @@ const FormAddEvent = ({location, setLocation, setIsLoading}) => {
     resolver: yupResolver(schemaAddEvent),
   });
 
-  /* @ts-ignore */
   const onSubmit = async () => {
     setIsLoading(true);
     const values = getValues();
@@ -84,13 +83,9 @@ const FormAddEvent = ({location, setLocation, setIsLoading}) => {
     } catch (error: any) {
       console.error('Error: ', error);
     } finally {
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 1000);
+      setIsLoading(false);
     }
   };
-
-  console.log('link value in form: ' + link);
 
   return (
     <View style={styles.container}>
