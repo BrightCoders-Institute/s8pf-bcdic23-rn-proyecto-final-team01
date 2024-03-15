@@ -11,6 +11,7 @@ import CheckBoxComponent from './CheckBoxComponent';
 import firestore from '@react-native-firebase/firestore';
 import InputMapComponent from './InputMapComponent';
 import ImagePickerComponent from './ImagePickerComponent';
+import {getDate} from '../hooks/getDate';
 
 const schemaAddEvent = yup.object().shape({
   nameEvent: yup.string().required('Nombre del evento es requerido'),
@@ -24,13 +25,8 @@ const schemaAddEvent = yup.object().shape({
 /* @ts-ignore */
 const FormAddEvent = ({location, setLocation, setIsLoading}) => {
   /* Date set */
-  const currentDate = new Date();
 
-  const formattedDate = `${currentDate.getFullYear()}-${(
-    currentDate.getMonth() + 1
-  )
-    .toString()
-    .padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;
+  const formattedDate = getDate();
 
   const [selectedDate, setSelectedDate] = useState<string>(formattedDate);
 
@@ -99,7 +95,7 @@ const FormAddEvent = ({location, setLocation, setIsLoading}) => {
         name="nameEvent"
       />
       <TextComponent text="Selecciona una foto de portada" />
-      <ImagePickerComponent errors={errors} setDownloadLink={handleSetLink} />
+      <ImagePickerComponent setDownloadLink={handleSetLink} />
       <TextComponent text="Selecciona una fecha" />
       <CalendarComponent onDateSelect={handleDateSelect} />
       <TextComponent text="Dirección del evento" />
