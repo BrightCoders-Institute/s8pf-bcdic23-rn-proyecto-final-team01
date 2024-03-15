@@ -6,6 +6,7 @@ import * as ImagePicker from 'react-native-image-picker';
 import {globalStyles} from '../theme/globalStyles';
 import storage from '@react-native-firebase/storage';
 import Icon from 'react-native-vector-icons/Ionicons';
+import ButtonComponent from './ButtonComponent';
 
 const ImagePickerComponent = ({errors, setDownloadLink}) => {
   const [response, setResponse] = React.useState<any>(null);
@@ -48,18 +49,16 @@ const ImagePickerComponent = ({errors, setDownloadLink}) => {
     <View style={styles.container}>
       <View
         style={[styles.btnContainer, response != null && {display: 'none'}]}>
-        <TouchableOpacity
-          style={styles.galleryButton}
+        <ButtonComponent
+          text="Galería"
+          styles={styles.galleryButton}
           onPress={() => onGalleryPress(options)}
-          disabled={response != null}>
-          <TextComponent text="Galería" font="bold" color="white" />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.cameraButton}
+        />
+        <ButtonComponent
+          text="Galería"
+          styles={styles.cameraButton}
           onPress={() => onCameraPress(options)}
-          disabled={response != null}>
-          <TextComponent text="Cámara" font="bold" color="white" />
-        </TouchableOpacity>
+        />
       </View>
       <View>
         {response?.assets &&
