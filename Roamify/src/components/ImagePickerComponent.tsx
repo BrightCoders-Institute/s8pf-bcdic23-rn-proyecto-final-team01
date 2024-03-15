@@ -1,24 +1,31 @@
-import React, {useState, useCallback} from 'react';
-import {View, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Button,
+  Image,
+  StyleProp,
+  ViewStyle,
+} from 'react-native';
+import React, {useState} from 'react';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import TextComponent from './TextComponent';
 import * as ImagePicker from 'react-native-image-picker';
 import {globalStyles} from '../theme/globalStyles';
 import storage from '@react-native-firebase/storage';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ButtonComponent from './ButtonComponent';
-/* @ts-ignore */
+import {object} from 'yup';
+
 const ImagePickerComponent = ({setDownloadLink}) => {
-  const [response, setResponse] = useState(null);
-  const [link, setLink] = useState(null);
+  const [response, setResponse] = React.useState<any>(null);
+  const [link, setLink] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const onGalleryPress = useCallback(() => {
-    /* @ts-ignore */
+  const onGalleryPress = React.useCallback(options => {
     ImagePicker.launchImageLibrary(options, setResponse);
   }, []);
 
-  const onCameraPress = useCallback(() => {
-    /* @ts-ignore */
+  const onCameraPress = React.useCallback(options => {
     ImagePicker.launchCamera(options, setResponse);
   }, []);
 
@@ -32,14 +39,12 @@ const ImagePickerComponent = ({setDownloadLink}) => {
         );
         return;
       }
-      /* @ts-ignore */
       const {uri, fileName} = response.assets[0];
       const reference = storage().ref(`images/${fileName}`);
       await reference.putFile(uri);
-      const downloadURL = await reference.getDownloadURL();
-      /* @ts-ignore */
-      setLink(downloadURL);
-      setDownloadLink(downloadURL);
+      const link = await reference.getDownloadURL();
+      setLink(link);
+      setDownloadLink(link);
     } catch (error) {
       console.error('Error uploading image:', error);
       console.log('Error', 'An error occurred while uploading the image');
@@ -47,41 +52,45 @@ const ImagePickerComponent = ({setDownloadLink}) => {
       setIsLoading(false);
     }
   };
-  /* @ts-ignore */
-  const renderButton = (text, onPress, styles) => (
-    <ButtonComponent text={text} onPress={onPress} styles={styles} />
-  );
-  const renderImages = () => {
-    /* @ts-ignore */
-    if (!response || !response.assets) return null;
-    /* @ts-ignore */
-    return response.assets.map(({uri}) => (
-      <View key={uri} style={styles.imageContainer}>
-        <Image
-          resizeMode="cover"
-          resizeMethod="scale"
-          style={styles.image}
-          source={{uri}}
-        />
-      </View>
-    ));
-  };
+
+  const renderButton = (
+    text: string,
+    onPress: () => void,
+    styles: StyleProp<ViewStyle>,
+  ) => <ButtonComponent text={text} onPress={onPress} styles={styles} />;
 
   return (
     <View style={styles.container}>
       <View
         style={[
           styles.btnContainer,
-          /* @ts-ignore */
-          response && response.assets && {display: 'none'},
+          response != null &&
+            response?.assets != undefined && {display: 'none'},
         ]}>
-        {renderButton('Galería', onGalleryPress, styles.galleryButton)}
-        {renderButton('Cámara', onCameraPress, styles.cameraButton)}
+        {renderButton(
+          'Galería',
+          () => onGalleryPress(options),
+          styles.galleryButton,
+        )}
+        {renderButton(
+          'Cámara',
+          () => onCameraPress(options),
+          styles.cameraButton,
+        )}
       </View>
       <View>
-        {renderImages()}
-        {/* @ts-ignore */}
-        {response && response.assets && (
+        {response?.assets &&
+          response?.assets.map(({uri}: {uri: string}) => (
+            <View key={uri} style={styles.imageContainer}>
+              <Image
+                resizeMode="cover"
+                resizeMethod="scale"
+                style={styles.image}
+                source={{uri: uri}}
+              />
+            </View>
+          ))}
+        {response != null && response?.assets != undefined && (
           <TouchableOpacity
             style={[globalStyles.buttonPrimary, link && {display: 'none'}]}
             onPress={uploadImage}>
@@ -92,7 +101,7 @@ const ImagePickerComponent = ({setDownloadLink}) => {
             />
           </TouchableOpacity>
         )}
-        {link && (
+        {link != null && (
           <View style={styles.messageContainer}>
             <TextComponent
               text="Imagen Guardada"
@@ -108,12 +117,13 @@ const ImagePickerComponent = ({setDownloadLink}) => {
   );
 };
 
+const includeExtra = true;
 const options = {
   quality: 0.7,
   selectionLimit: 1,
   mediaType: 'photo',
   includeBase64: false,
-  includeExtra: true,
+  includeExtra,
 };
 
 const styles = StyleSheet.create({
