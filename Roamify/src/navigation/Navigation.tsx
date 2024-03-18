@@ -9,6 +9,7 @@ import GoogleMapComponent from '../components/googlemaps/GoogleMapComponent';
 import EventDetails from '../screens/EventDetails';
 import ProfileScreen from '../screens/ProfileScreen';
 import { AuthProvider } from '../contexts/AuthContext';
+import MapScreen from '../screens/MapScreen';
 
 const Stack = createStackNavigator();
 
@@ -30,6 +31,7 @@ const StackNavigation = () => {
           <Stack.Screen name="EventDetails" component={EventDetails} />
           <Stack.Screen name="GoogleMapComponent" component={GoogleMapComponent} />
           <Stack.Screen name="AuthScreen" component={AuthScreen} />
+          <Stack.Screen name="MapScreen" component={MapScreen} />
         </Stack.Navigator>
       </AuthProvider>
     </NavigationContainer>

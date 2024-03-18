@@ -8,15 +8,17 @@ interface Props {
   text: string;
   styles?: StyleProp<ViewStyle>;
   onPress?: () => void;
+  disabled?: boolean;
 }
 
 const ButtonComponent = (props: Props) => {
-  const {text, onPress, styles} = props;
+  const {text, onPress, styles, disabled} = props;
 
   return (
     <TouchableOpacity
       onPress={onPress}
       style={styles ? styles : globalStyles.buttonPrimary}
+      disabled={disabled}
       activeOpacity={0.7}>
       <TextComponent text={text} font="bold" color="white" />
     </TouchableOpacity>

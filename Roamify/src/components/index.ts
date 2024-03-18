@@ -34,9 +34,7 @@ export const createRadomName = (): string => {
         const rnum = Math.floor(Math.random() * characters.length);
         randomstring += characters.substring(rnum, rnum + 1);
     }
-    let date = Date.now();
-    let name = `${randomstring}+${date}`
-    return name;
+    return `${randomstring}+${Date.now()}`
 }
 
 export const updateDataUser = async (

@@ -48,7 +48,6 @@ const ImageWithButton = ({ setIsLoading }: ImageInputProps) => {
         setIsLoading(true);
         try {
             const fetchImg = await fetchImageUrl(userId);
-            console.log('fetchImg',fetchImg);
             setImageUrl(fetchImg);
         } catch (error) {
             console.error('Error loading image:', error);
