@@ -50,3 +50,17 @@ export const updateDataUser = async (
         console.error('Error al actualizar el documento:', error);
     }
 };
+
+export const fetchImageUrl = async (
+    userId: string
+): Promise<string> => {
+    try {
+        const userDoc = await firestore().collection('users').doc(userId).get();
+        const userData = userDoc.data();
+        if (userData && (typeof (userData.profileImgURL) === 'string')) {
+            return userData.profileImgURL
+        }
+    } catch (error) {
+        console.error('Error fetching image URL:', error);
+    }
+}

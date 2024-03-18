@@ -1,7 +1,7 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text, Image } from 'react-native';
 import * as ImagePicker from 'react-native-image-picker';
-import { updateDataUser, uploadImageStorange } from '.';
+import { fetchImageUrl, updateDataUser, uploadImageStorange } from '.';
 import { ActionImagePicker, ImageInputProps } from './types';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -21,6 +21,7 @@ const actions: ActionImagePicker[] = [
 
 const ImageWithButton = ({ setIsLoading }: ImageInputProps) => {
     const { userId } = useAuth();
+    const [imageUrl, setImageUrl] = useState<null | string>(null);
 
     const handleImageUpload = useCallback(async () => {
         try {
@@ -34,17 +35,37 @@ const ImageWithButton = ({ setIsLoading }: ImageInputProps) => {
             const data = { profileImgURL: uploadedImageData }
             await updateDataUser({ userId, data });
             console.log('Image uploaded successfully');
+            loadImage()
         } catch (error) {
-            // console.error('Error handling image upload:', error);
+            console.error('Error handling image upload:', error);
             return
         } finally {
             setIsLoading(false);
         }
     }, [userId]);
 
+    const loadImage = async () => {
+        setIsLoading(true);
+        try {
+            const fetchImg = await fetchImageUrl(userId);
+            console.log('fetchImg',fetchImg);
+            setImageUrl(fetchImg);
+        } catch (error) {
+            console.error('Error loading image:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        loadImage()
+    }, [userId])
+
     return (
         <View style={styles.container}>
-            <Image source={require('../assets/user.jpg')} style={styles.image} />
+            <Image
+                source={imageUrl ? { uri: imageUrl } : require('../assets/user.jpg')}
+                style={styles.image} />
             <TouchableOpacity onPress={handleImageUpload} style={styles.button}>
                 <Text style={styles.textBtn}>+</Text>
             </TouchableOpacity>
