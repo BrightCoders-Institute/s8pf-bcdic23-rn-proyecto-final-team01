@@ -5,9 +5,7 @@ import Header from '../components/Header';
 import NavBar from '../components/NavBar';
 import {globalStyles} from '../theme/globalStyles';
 import Icon from 'react-native-vector-icons/Ionicons';
-import CardComponent from '../components/CardComponent';
 import BarComponent from '../components/BarComponent';
-import CardContainer from '../components/CardContainer';
 import FlatListComponent from '../components/FlatListComponent';
 
 
@@ -15,7 +13,7 @@ const HomeScreen = () => {
   const navigation = useNavigation();
 
   const handleCardPress = () => {
-    navigation.navigate('EventDetails'); 
+    navigation.navigate('EventDetailsScreen'); 
   };
 
   return (
