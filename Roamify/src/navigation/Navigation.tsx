@@ -6,7 +6,7 @@ import MyEventsScreen from '../screens/MyEventsScreen';
 import FavoritesScreen from '../screens/FavoritesScreen';
 import AddEventScreen from '../screens/AddEventScreen';
 import GoogleMapComponent from '../components/googlemaps/GoogleMapComponent';
-import EventDetails from '../screens/EventDetails';
+import EventDetailsScreen from '../screens/EventDetailsScreen';
 
 const Stack = createStackNavigator();
 
@@ -20,10 +20,10 @@ const StackNavigation = () => {
         screenOptions={{
           headerShown: false,
         }}>
-        <Stack.Screen name="EventDetails" component={EventDetails} />
+        <Stack.Screen name="HomeScreen" component={HomeScreen} />
+        <Stack.Screen name="EventDetailsScreen" component={EventDetailsScreen} />
         <Stack.Screen name="AuthScreen" component={AuthScreen} />
         <Stack.Screen name="AddEventScreen" component={AddEventScreen} />
-        <Stack.Screen name="HomeScreen" component={HomeScreen} />
         <Stack.Screen name="MyEventsScreen" component={MyEventsScreen} />
         <Stack.Screen name="FavoritesScreen" component={FavoritesScreen} />
         <Stack.Screen name="GoogleMapComponent" component={GoogleMapComponent} />
