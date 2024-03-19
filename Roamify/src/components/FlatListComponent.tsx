@@ -39,7 +39,7 @@ const FlatListComponent = () => {
     return (
       <Item
         item={item}
-        onPress={() => navigation.navigate('EventDetails')}
+        onPress={() => navigation.navigate('EventDetailsScreen', {selectedId: item.id})}
         backgroundColor={backgroundColor}
         textColor={color}
       />
@@ -64,6 +64,7 @@ const styles = StyleSheet.create({
     padding: 10,
     display: 'flex',
     flexDirection: 'column',
+    gap: 10,
     
   },
   item: {
