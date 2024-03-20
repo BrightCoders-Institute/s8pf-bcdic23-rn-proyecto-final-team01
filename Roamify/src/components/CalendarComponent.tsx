@@ -1,21 +1,22 @@
 import React, {useEffect, useState} from 'react';
 import {Calendar, LocaleConfig} from 'react-native-calendars';
 import Icon from 'react-native-vector-icons/Entypo';
+import {getDate} from '../hooks/getDate';
 
 LocaleConfig.locales['fr'] = {
   monthNames: [
-    'January ',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
+    'Enero ',
+    'Febrero',
+    'Marzo',
+    'Abril',
+    'Mayo',
+    'Junio',
+    'Julio',
+    'Agosto',
+    'Septiembre',
+    'Octubre',
+    'Noviembre',
+    'Diciembre',
   ],
   monthNamesShort: [
     'Jan ',
@@ -31,31 +32,32 @@ LocaleConfig.locales['fr'] = {
     'Nov',
     'Dec',
   ],
-  dayNames: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
-  dayNamesShort: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
+  dayNames: ['D', 'M', 'T', 'W', 'T', 'F', 'S'],
+  dayNamesShort: ['D', 'L', 'M', 'W', 'J', 'V', 'S'],
   today: 'Today',
 };
+
+interface Props {
+  onDateSelect: (dateString: string) => void;
+}
 
 LocaleConfig.defaultLocale = 'fr';
 
 const currentDate = new Date();
 
-interface DateProps {
-  onSelectDate?: (date: string) => void;
-}
+const formattedDate = getDate();
 
-const CalendarComponent = (props: DateProps) => {
-  const {onSelectDate} = props;
-  const [selected, setSelected] = useState('');
+const CalendarComponent = (props: Props) => {
+  const [selected, setSelected] = useState<string>(formattedDate);
 
-  /*  useEffect(() => {
-    onSelectDate(selected);
-  }, [selected, onSelectDate]);
- */
+  const {onDateSelect} = props;
+
   return (
     <Calendar
       onDayPress={day => {
         setSelected(day.dateString);
+        console.log('Calendar component: ' + day.dateString);
+        onDateSelect(day.dateString);
       }}
       markedDates={{
         [selected]: {

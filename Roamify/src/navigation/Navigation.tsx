@@ -1,5 +1,5 @@
-import {createStackNavigator, StackScreenProps} from '@react-navigation/stack';
-import {NavigationContainer} from '@react-navigation/native';
+import { createStackNavigator, StackScreenProps } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
 import HomeScreen from '../screens/HomeScreen';
 import AuthScreen from '../screens/AuthScreen';
 import MyEventsScreen from '../screens/MyEventsScreen';
@@ -10,7 +10,7 @@ import EventDetailsScreen from '../screens/EventDetailsScreen';
 
 const Stack = createStackNavigator();
 
-export interface PropsNavigator extends StackScreenProps<any, any> {}
+export interface PropsNavigator extends StackScreenProps<any, any> { }
 
 
 const StackNavigation = () => {
