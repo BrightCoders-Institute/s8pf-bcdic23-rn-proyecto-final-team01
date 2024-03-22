@@ -5,6 +5,7 @@ import Header from '../components/Header';
 import NavBar from '../components/NavBar';
 import {globalStyles} from '../theme/globalStyles';
 import GoogleMapComponent from '../components/googlemaps/GoogleMapComponent';
+import MapScreenComponent from '../components/googlemaps/MapScreenComponent';
 
 const MapScreen = () => {
   const navigation = useNavigation();
@@ -12,8 +13,8 @@ const MapScreen = () => {
     <View style={globalStyles.screen}>
       <Header />
       <View style={{width: '100%', height: '78%'}}>
-      <GoogleMapComponent >
-      </GoogleMapComponent>
+      <MapScreenComponent>
+      </MapScreenComponent>
       </View>
       <NavBar />
     </View>
