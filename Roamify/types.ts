@@ -13,6 +13,7 @@ export type FormFieldProps = {
   control: any;
   errors?: any;
   setValue?: any;
+  disabled?: boolean;
 };
 
 export type InputFileProps = {

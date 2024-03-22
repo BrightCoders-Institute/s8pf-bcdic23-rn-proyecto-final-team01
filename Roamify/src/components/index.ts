@@ -1,6 +1,7 @@
 import storage from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore';
 import { ImageStorageProp, ResquestUpdateUser } from './types';
+import auth, { firebase } from '@react-native-firebase/auth';
 
 export const uploadImageStorange = async (
     { uri, route }: ImageStorageProp
@@ -29,7 +30,6 @@ export const createRadomName = (): string => {
     const characters = "ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
     const lenString = 16;
     let randomstring = '';
-
     for (var i = 0; i < lenString; i++) {
         const rnum = Math.floor(Math.random() * characters.length);
         randomstring += characters.substring(rnum, rnum + 1);
@@ -62,3 +62,57 @@ export const fetchImageUrl = async (
         console.error('Error fetching image URL:', error);
     }
 }
+
+export const getUserData = () => {
+    const user = auth().currentUser;
+    if (user) {
+        return user;
+    } else {
+        // El usuario no está autenticado o el objeto de usuario es nulo
+        throw new Error('No hay usuario autenticado.');
+    }
+};
+
+export const updatePassword = async (newPassword: string) => {
+    try {
+        const user = firebase.auth().currentUser;
+        // Verifica si el usuario está autenticado
+        if (!user) {
+            throw new Error('No hay usuario autenticado.');
+        }
+        console.log(user);
+
+        console.log(newPassword);
+        // Actualiza la contraseña del usuario
+        await user.updatePassword(newPassword);
+
+        console.log('Contraseña actualizada correctamente.');
+    } catch (error) {
+        console.error('Error al actualizar la contraseña:', error.message);
+        throw error;
+    }
+};
+
+export const reauthenticateAndChangePassword = async (
+    currentPassword: string, newPassword: string
+) => {
+    try {
+        const user = getUserData();
+        // Crear un credential con la contraseña actual del usuario
+        const credential = firebase.auth.EmailAuthProvider.credential(user.email, currentPassword);
+        // Reautenticar al usuario con la credencial
+        await user.reauthenticateWithCredential(credential);
+        // Cambiar la contraseña del usuario
+        await user.updatePassword(newPassword);
+        console.log('Contraseña actualizada exitosamente.');
+    } catch (error) {
+        if (error.code === 'auth/requires-recent-login') {
+            // Si se requiere una autenticación reciente, solicitar al usuario que vuelva a autenticarse
+            console.log('Se requiere una autenticación reciente. Solicitando al usuario que vuelva a autenticarse.');
+            // Aquí se puede redirigir al usuario a una pantalla de inicio de sesión o mostrar un modal de autenticación.
+        } else {
+            // Manejar otros errores
+            console.error('Error al cambiar la contraseña:', error.message);
+        }
+    }
+};

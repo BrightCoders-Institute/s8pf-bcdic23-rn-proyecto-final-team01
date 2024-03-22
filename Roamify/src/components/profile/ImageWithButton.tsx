@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text, Image } from 'react-native';
 import * as ImagePicker from 'react-native-image-picker';
-import { fetchImageUrl, updateDataUser, uploadImageStorange } from '.';
-import { ActionImagePicker, ImageInputProps } from './types';
-import { useAuth } from '../contexts/AuthContext';
+import { fetchImageUrl, updateDataUser, uploadImageStorange } from '..';
+import { ActionImagePicker, ImageInputProps } from '../types';
+import { useAuth } from '../../contexts/AuthContext';
 
 const actions: ActionImagePicker[] = [
     {
@@ -63,7 +63,7 @@ const ImageWithButton = ({ setIsLoading }: ImageInputProps) => {
     return (
         <View style={styles.container}>
             <Image
-                source={imageUrl ? { uri: imageUrl } : require('../assets/user.jpg')}
+                source={imageUrl ? { uri: imageUrl } : require('../../assets/user.jpg')}
                 style={styles.image} />
             <TouchableOpacity onPress={handleImageUpload} style={styles.button}>
                 <Text style={styles.textBtn}>+</Text>

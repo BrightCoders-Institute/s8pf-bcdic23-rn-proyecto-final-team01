@@ -24,13 +24,13 @@ const StackNavigation = () => {
             headerShown: false,
           }}>
           <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+          <Stack.Screen name="AuthScreen" component={AuthScreen} />
           <Stack.Screen name="AddEventScreen" component={AddEventScreen} />
           <Stack.Screen name="HomeScreen" component={HomeScreen} />
           <Stack.Screen name="MyEventsScreen" component={MyEventsScreen} />
           <Stack.Screen name="FavoritesScreen" component={FavoritesScreen} />
           <Stack.Screen name="EventDetails" component={EventDetails} />
           <Stack.Screen name="GoogleMapComponent" component={GoogleMapComponent} />
-          <Stack.Screen name="AuthScreen" component={AuthScreen} />
           <Stack.Screen name="MapScreen" component={MapScreen} />
         </Stack.Navigator>
       </AuthProvider>

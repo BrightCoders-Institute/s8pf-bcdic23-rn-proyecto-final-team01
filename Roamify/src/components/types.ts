@@ -18,10 +18,10 @@ export type ActionImagePicker = {
 
 export type ResquestUpdateUser = {
     userId: string;
-    data: userUpdateProp;
+    data: userDataProp;
 };
 
-export type userUpdateProp = {
+export type userDataProp = {
     email?: string;
     name?: string;
     profileImgURL?: string;
