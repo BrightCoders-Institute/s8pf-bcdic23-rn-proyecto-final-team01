@@ -42,20 +42,7 @@ const FormProfile = () => {
 
     const onSubmit = () => {
         const values = getValues();
-        try {
-            if (!showName && !showPassword) {
-                return;
-            } else if (showName && !showPassword) {
-                console.log('name', values.name);
-            } else if (showPassword && !showName) {
-                console.log('Newpassword', values.password);
-                console.log('password', password);
-            } else if (showPassword && showName) {
-                console.log('password', values);
-            }
-        } catch (error) {
-            console.error('Error al llamar a la función changePassword:', error.message);
-        }
+        return
     };
 
     return (
