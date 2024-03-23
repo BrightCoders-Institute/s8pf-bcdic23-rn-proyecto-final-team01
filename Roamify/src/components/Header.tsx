@@ -1,16 +1,35 @@
-import {View, Text, Image, StyleSheet} from 'react-native';
-import React from 'react';
-import {globalStyles} from '../theme/globalStyles';
+import React, { useState } from 'react';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { globalStyles } from '../theme/globalStyles';
+import DropDownMenu from './DropDownMenu'; // assuming the DropDownMenu component is in the components folder
 import TextComponent from './TextComponent';
 
 const Header = () => {
+  const [menuVisible, setMenuVisible] = useState(false);
+  const handlePress = (route) => {
+    setMenuVisible(false);
+  };
+
   return (
     <View style={styles.headerContainer}>
       <View style={globalStyles.rowContainer}>
         <Image source={require('../assets/logo.jpg')} style={styles.logo} />
-        <TextComponent text="Roamify" size={32} font="bold" />
+        <TextComponent text='Roamify' size={32} font='bold'/>
       </View>
-      <Text style={{color: 'black'}}>current user</Text>
+      <TouchableOpacity onPress={() => setMenuVisible(!menuVisible)} style={styles.profileContainer}>
+        <Image source={require('../assets/user.png')} style={styles.avatar} />
+        
+      </TouchableOpacity>
+      {menuVisible && (
+        <View style={styles.dropdownContainer}>
+          <TouchableOpacity onPress={() => handlePress('SettingsScreen')} style={styles.dropdownItem}>
+            <Text style={styles.dropdownText}>Configuración</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => handlePress('LogOut')} style={styles.dropdownItem}>
+            <Text style={styles.dropdownText}>Cerrar sesión</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 };
@@ -24,12 +43,47 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: 'white',
     width: '100%',
+    zIndex: 10,
   },
   logo: {
     borderRadius: 100,
     width: 60,
     height: 60,
   },
-});
+  profileContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  avatar: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    marginRight: 8,
+  },
+  dropdownContainer: {
+    position: 'absolute',
+    right: 10,
+    top: 58,
+    backgroundColor: 'white',
+    borderRadius: 6,
+    shadowOpacity: 0.25,
+    shadowRadius: 5,
+    shadowColor: 'black',
+    shadowOffset: { height: 0, width: 0 },
+    elevation: 5, 
+    zIndex: 1000,
+  },
+  dropdownItem: {
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    flexDirection: 'row',
+    alignItems: 'center',
 
-export default Header;
+  },
+  dropdownText: {
+  fontSize: 17,
+  color: '#000',
+  },
+  });
+  
+  export default Header;
