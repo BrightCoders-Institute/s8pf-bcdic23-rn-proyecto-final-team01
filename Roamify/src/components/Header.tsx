@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { globalStyles } from '../theme/globalStyles';
-import DropDownMenu from './DropDownMenu'; // assuming the DropDownMenu component is in the components folder
 import TextComponent from './TextComponent';
 import {useNavigation} from '@react-navigation/native';
 
