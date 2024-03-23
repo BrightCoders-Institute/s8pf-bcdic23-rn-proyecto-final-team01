@@ -9,7 +9,7 @@ import {
   import Icon from 'react-native-vector-icons/Ionicons'
   
   interface Props {
-    iconName: string;
+    iconName?: string;
     iconSize?: number;
     iconColor?: string;
     backgroundColor?: string;
