@@ -3,8 +3,10 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { globalStyles } from '../theme/globalStyles';
 import DropDownMenu from './DropDownMenu'; // assuming the DropDownMenu component is in the components folder
 import TextComponent from './TextComponent';
+import {useNavigation} from '@react-navigation/native';
 
 const Header = () => {
+
   const [menuVisible, setMenuVisible] = useState(false);
   const handlePress = (route) => {
     setMenuVisible(false);
@@ -22,7 +24,7 @@ const Header = () => {
       </TouchableOpacity>
       {menuVisible && (
         <View style={styles.dropdownContainer}>
-          <TouchableOpacity onPress={() => handlePress('SettingsScreen')} style={styles.dropdownItem}>
+          <TouchableOpacity onPress={() => navigation.navigate('ProfileScreen')} style={styles.dropdownItem}>
             <Text style={styles.dropdownText}>Configuración</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => handlePress('LogOut')} style={styles.dropdownItem}>
