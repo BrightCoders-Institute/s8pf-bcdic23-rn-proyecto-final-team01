@@ -20,13 +20,13 @@ const NavBar = () => {
     <View style={[globalStyles.rowContainer, styles.navBarContainer]}>
       <NavItemComponent
         text="Home"
-        icon="home"
+        icon={route.name === 'HomeScreen' ? 'home' : 'home-outline'}
         active={route.name === 'HomeScreen'}
         onPress={() => handleScreen('HomeScreen')}
       />
       <NavItemComponent
         text="Mis Eventos"
-        icon="add-outline"
+        icon={route.name === 'MyEventsScreen' ? 'add-circle' : 'add-outline'}
         active={
           route.name === 'MyEventsScreen' || route.name === 'AddEventScreen'
         }
@@ -34,13 +34,13 @@ const NavBar = () => {
       />
       <NavItemComponent
         text="Mapa"
-        icon="map"
+        icon={route.name === 'MapScreen' ? 'map' : 'map-outline'}
         active={route.name === 'MapScreen'}
         onPress={() => handleScreen('MapScreen')}
       />
       <NavItemComponent
         text="Favoritos"
-        icon="heart"
+        icon={route.name === 'FavoritesScreen' ? 'heart' : 'heart-outline'}
         active={route.name === 'FavoritesScreen'}
         onPress={() => handleScreen('FavoritesScreen')}
       />
