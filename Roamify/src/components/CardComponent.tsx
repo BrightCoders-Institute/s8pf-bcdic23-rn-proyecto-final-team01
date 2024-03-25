@@ -2,32 +2,42 @@ import {View, StyleSheet, Image, ImageProps} from 'react-native';
 import React from 'react';
 import TextComponent from './TextComponent';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 interface Props {
   name: string;
   description: string;
-  image: ImageProps;
+  image: string;
   favorite?: boolean;
+  onPress: () => void;
 }
 
 const CardComponent = (props: Props) => {
-  const {name, description, image, favorite} = props;
+  const {name, description, image, favorite, onPress} = props;
+
+  const renderDescription = (text: string) => {
+    const words = text.split(' ');
+    const limitedWords = words.slice(0, 25);
+    return limitedWords.join(' ');
+  };
+
+  const limitedDescription = renderDescription(description);
 
   return (
-    <View style={styles.cardContainer}>
+    <TouchableOpacity onPress={onPress} style={styles.cardContainer}>
       {favorite && (
         <Icon name="heart" color="red" size={25} style={styles.heartIcon} />
       )}
       <Image
-        source={image}
+        source={{uri: image}}
         style={{width: '100%', height: 150, objectFit: 'cover'}}
       />
       <View style={styles.textContainer}>
         <View style={styles.tittleContainer}>
           <TextComponent text={name} font="bold" size={26} />
         </View>
-        <TextComponent text={description} />
+        <TextComponent text={`${limitedDescription}...`} />
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -38,12 +48,14 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 12,
+      height: 2,
     },
-    shadowOpacity: 0.58,
-    shadowRadius: 16.0,
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+    elevation: 4,
     overflow: 'hidden',
-    elevation: 24,
+    marginVertical: 15,
+    marginHorizontal: 5,
   },
   textContainer: {
     display: 'flex',
