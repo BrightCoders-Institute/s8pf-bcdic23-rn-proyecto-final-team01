@@ -1,60 +1,72 @@
-import {View, ScrollView} from 'react-native';
-import React, {useState} from 'react';
+import {View, ScrollView, StyleSheet} from 'react-native';
+import React, {useState, useRef, useEffect} from 'react';
 import BarItemComponent from './BarItemComponent';
 
-const BarComponent = () => {
+const BarComponent = ({setSelectedCategory}) => {
   const [active, setActive] = useState('Destacado');
+  const scrollViewRef = useRef<ScrollView>(null);
+  const [scrollX, setScrollX] = useState(0);
 
-  const handleCategory = (text: string) => {
+  useEffect(() => {
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollTo({x: scrollX, animated: true});
+    }
+  }, [scrollX]);
+
+  const handleCategory = (text: string, index: number) => {
     setActive(text);
+    setScrollX(index * (itemWidth + itemSpacing));
+    setSelectedCategory(text);
   };
 
+  const categories = [
+    {text: 'Destacado'},
+    {text: 'Turísticos'},
+    {text: 'Históricos'},
+    {text: 'Sociales'},
+    {text: 'Por Temporada'},
+    {text: 'Playas'},
+    {text: 'Festivos'},
+  ];
+
+  const itemWidth = 95;
+  const itemSpacing = 5;
+
   return (
-    <View
-      style={{
-        marginTop: 25,
-        marginHorizontal: 15,
-        marginBottom: 10,
-      }}>
-      <ScrollView horizontal>
-        <BarItemComponent
-          text="Destacado"
-          active={active === 'Destacado'}
-          onPress={() => handleCategory('Destacado')}
-        />
-        <BarItemComponent
-          text="Turísticos"
-          active={active === 'Turísticos'}
-          onPress={() => handleCategory('Turísticos')}
-        />
-        <BarItemComponent
-          text="Históricos"
-          active={active === 'Históricos'}
-          onPress={() => handleCategory('Históricos')}
-        />
-        <BarItemComponent
-          text="Sociales"
-          active={active === 'Sociales'}
-          onPress={() => handleCategory('Sociales')}
-        />
-        <BarItemComponent
-          text="Por Temporada"
-          active={active === 'Por Temporada'}
-          onPress={() => handleCategory('Por Temporada')}
-        />
-        <BarItemComponent
-          text="Playas"
-          active={active === 'Playas'}
-          onPress={() => handleCategory('Playas')}
-        />
-        <BarItemComponent
-          text="Festivos"
-          active={active === 'Festivos'}
-          onPress={() => handleCategory('Festivos')}
-        />
-      </ScrollView>
+    <View style={{paddingHorizontal: 25}}>
+      <View style={styles.container}>
+        <ScrollView
+          horizontal
+          style={styles.barContainer}
+          contentContainerStyle={active != 'Destacado' && {paddingLeft: 32}}
+          ref={scrollViewRef}
+          showsHorizontalScrollIndicator={false}>
+          {categories.map((category, index) => (
+            <BarItemComponent
+              key={index}
+              text={category.text}
+              active={active === category.text}
+              onPress={() => handleCategory(category.text, index)}
+            />
+          ))}
+        </ScrollView>
+      </View>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#9BEBFF',
+    borderRadius: 100,
+    overflow: 'hidden',
+    padding: 5,
+  },
+  barContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: 15,
+  },
+});
 
 export default BarComponent;
