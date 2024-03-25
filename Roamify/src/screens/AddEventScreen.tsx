@@ -4,7 +4,6 @@ import Header from '../components/Header';
 import {globalStyles} from '../theme/globalStyles';
 import FormAddEvent from '../components/FormAddEvent';
 import TextComponent from '../components/TextComponent';
-import CardContainer from '../components/CardContainer';
 import LoadingComponent from '../components/LoadingComponent';
 
 const AddEventScreen = () => {

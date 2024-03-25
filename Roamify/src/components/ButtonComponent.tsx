@@ -2,7 +2,7 @@ import React from 'react';
 import TextComponent from './TextComponent';
 import {globalStyles} from '../theme/globalStyles';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {StyleProp, View, ViewStyle} from 'react-native';
+import {StyleProp, ViewStyle} from 'react-native';
 
 interface Props {
   text: string;
