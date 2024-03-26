@@ -27,6 +27,12 @@ export type userDataProp = {
     profileImgURL?: string;
 };
 
+export type userAuthProp = {
+    email: string;
+    name?: string;
+    password: string;
+};
+
 export type ImageInputProps = {
     setIsLoading: Dispatch<SetStateAction<boolean>>;
 }
@@ -42,5 +48,15 @@ export type InputWithIconComponentProps = {
     textLabel: string;
     iconName?: string;
     texInputDisabled: string;
+}
+
+export type InputLabelComponentProps = {
+    control: any;
+    name: string;
+    placeholder: string;
+    rules: object;
+    style: object;
+    textLabel: string;
+    secureTextEntry?: boolean;
 }
 
