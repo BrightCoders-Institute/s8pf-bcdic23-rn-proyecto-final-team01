@@ -12,7 +12,6 @@ import NavBar from '../components/NavBar';
 import {globalStyles} from '../theme/globalStyles';
 import Icon from 'react-native-vector-icons/Ionicons';
 import BarComponent from '../components/BarComponent';
-import FlatListComponent from '../components/FlatListComponent';
 import {getData} from '../hooks/getData';
 import CardComponent from '../components/CardComponent';
 import DataComponent from '../components/DataComponent';
