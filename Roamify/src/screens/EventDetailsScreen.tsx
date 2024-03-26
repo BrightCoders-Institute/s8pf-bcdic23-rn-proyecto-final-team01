@@ -1,18 +1,17 @@
 import React from 'react';
-import { View, Image, StyleSheet, ScrollView} from 'react-native';
+import {View, Image, StyleSheet, ScrollView} from 'react-native';
 import TextComponent from '../components/TextComponent';
 import ReviewComponent from '../components/ReviewComponent';
 import FabComponent from '../components/FabComponent';
-import { PropsNavigator } from '../navigation/Navigation';
+import {PropsNavigator} from '../navigation/Navigation';
 import InfoItem from '../components/InfoItem';
-import DATA from '../API/EventsData';
 
 const EventDetailsScreen = ({navigation, route}: PropsNavigator) => {
-  const { selectedId } = route.params;
-  if(!selectedId) {
+  const {data} = route.params;
+
+  if (!route.params) {
     return null;
   }
-  const eventData = DATA.find(item => item.id === selectedId); 
   return (
     <ScrollView>
       <FabComponent
@@ -24,34 +23,34 @@ const EventDetailsScreen = ({navigation, route}: PropsNavigator) => {
       />
       <View style={styles.container}>
         <Image
-          source={eventData?.sample}
+          source={{uri: data.image}}
           style={styles.image}
           resizeMode="cover"
         />
         <View style={styles.detailsContainer}>
-          <InfoItem eventData={eventData?.title} fontSize={40} font="bold"/>
-          <InfoItem icon="location" eventData={eventData?.description} />
-          <InfoItem icon="calendar" eventData={eventData?.date} />
-          <InfoItem icon="time" eventData={eventData?.hour} />
-          <InfoItem icon="cash" eventData={eventData?.price}/>
-          <InfoItem eventData={eventData?.description}/>
-        </View>  
+          <TextComponent text={data.nameEvent} font="bold" size={28} />
+          <InfoItem icon="location" eventData="Ver dirección en el mapa" />
+          <InfoItem icon="calendar" eventData={data.date} />
+          <InfoItem icon="time" eventData={'6:00 PM'} />
+          <InfoItem icon="cash" eventData={'$199.00'} />
+          <TextComponent text={data.descriptionEvent} />
         </View>
-        <View style={styles.detailsContainer}>
-          {/* <GoogleMapComponent /> */}
-          <Image
-          source={require('../assets/map.jpg')} 
+      </View>
+      <View style={styles.detailsContainer}>
+        {/* <GoogleMapComponent /> */}
+        <Image
+          source={require('../assets/map.jpg')}
           style={styles.image}
           resizeMode="cover"
-          />
-        </View>
-        <View style={styles.review}>
-          <ReviewComponent
-              image={require('../assets/user.jpg')} 
-              userName="Nombre del usuario"
-              userReview="Reseña del usuario"
-          />
-          </View>
+        />
+      </View>
+      <View style={styles.review}>
+        <ReviewComponent
+          image={require('../assets/user.jpg')}
+          userName="Nombre del usuario"
+          userReview="Reseña del usuario"
+        />
+      </View>
     </ScrollView>
   );
 };
@@ -61,7 +60,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   image: {
-    width: '100%', 
+    width: '100%',
     height: 200,
   },
   iconGray: {
@@ -69,7 +68,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   icon: {
-    color: "#FFD43B",
+    color: '#FFD43B',
   },
   detailsContainer: {
     padding: 20,
@@ -88,7 +87,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     width: '100%',
     height: '40%',
-  }
+  },
 });
 
 export default EventDetailsScreen;

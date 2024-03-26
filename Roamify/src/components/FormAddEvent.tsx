@@ -12,20 +12,31 @@ import firestore from '@react-native-firebase/firestore';
 import InputMapComponent from './InputMapComponent';
 import ImagePickerComponent from './ImagePickerComponent';
 import {getDate} from '../hooks/getDate';
+import {useNavigation} from '@react-navigation/native';
+import InputCategory from './InputCategory';
 
 const schemaAddEvent = yup.object().shape({
   nameEvent: yup.string().required('Nombre del evento es requerido'),
   image: yup.string(),
   descriptionEvent: yup.string().required('La descripción es requerida'),
   date: yup.string(),
+  category: yup.string(),
   map: yup.object().required('Selecciona una ubicación válida'),
   limitedCapacity: yup.boolean(),
 });
 
 /* @ts-ignore */
 const FormAddEvent = ({location, setLocation, setIsLoading}) => {
-  /* Date set */
+  const navigation = useNavigation();
 
+  /* Category set */
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
+
+  const handleCategorySelect = (category: string) => {
+    setSelectedCategory(category);
+  };
+
+  /* Date set */
   const formattedDate = getDate();
 
   const [selectedDate, setSelectedDate] = useState<string>(formattedDate);
@@ -56,11 +67,16 @@ const FormAddEvent = ({location, setLocation, setIsLoading}) => {
     resolver: yupResolver(schemaAddEvent),
   });
 
+  const values = getValues();
+  values.category = selectedCategory;
+  console.log('Valores: ' + values.category);
+
   const onSubmit = async () => {
     setIsLoading(true);
     const values = getValues();
     const {nameEvent, descriptionEvent, image, date, map, limitedCapacity} =
       values;
+    const category = selectedCategory;
     try {
       firestore()
         .collection('events')
@@ -69,6 +85,7 @@ const FormAddEvent = ({location, setLocation, setIsLoading}) => {
           descriptionEvent,
           image: link,
           date: selectedDate,
+          category,
           map,
           limitedCapacity: isChecked,
         })
@@ -80,6 +97,8 @@ const FormAddEvent = ({location, setLocation, setIsLoading}) => {
       console.error('Error: ', error);
     } finally {
       setIsLoading(false);
+      /* @ts-ignore */
+      navigation.navigate('MyEventsScreen');
     }
   };
 
@@ -98,6 +117,9 @@ const FormAddEvent = ({location, setLocation, setIsLoading}) => {
       <ImagePickerComponent setDownloadLink={handleSetLink} />
       <TextComponent text="Selecciona una fecha" />
       <CalendarComponent onDateSelect={handleDateSelect} />
+      <TextComponent text="Selecciona una categoría" />
+      <InputCategory errors={errors} setCategory={handleCategorySelect} />
+      <TextComponent text="Hora" />
       <TextComponent text="Dirección del evento" />
       <InputMapComponent
         placeholder="Seleccionar en el mapa"
@@ -119,6 +141,7 @@ const FormAddEvent = ({location, setLocation, setIsLoading}) => {
         errors={errors}
         name="descriptionEvent"
       />
+      <TextComponent text="Costo del evento (Opcional)" />
       <TextComponent text="Capacidad limitada" />
       <CheckBoxComponent onPress={() => setIsChecked(!isChecked)} />
       <TouchableOpacity

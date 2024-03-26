@@ -13,9 +13,20 @@ const BarItemComponent = (props: Props) => {
 
   return (
     <TouchableOpacity
-      style={[styles.touchableStyle, active && {opacity: 1}]}
+      style={[
+        styles.touchableStyle,
+        active && {
+          opacity: 1,
+          backgroundColor: '#F9F9F9',
+        },
+      ]}
       onPress={onPress}>
-      <TextComponent text={text} font="bold" />
+      <TextComponent
+        text={text}
+        font="bold"
+        size={16}
+        /* styles={[{color: 'white'}, active && {color: '#040415'}]} */
+      />
     </TouchableOpacity>
   );
 };
@@ -25,20 +36,9 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    marginHorizontal: 10,
-    marginBottom: 10,
-    padding: 15,
-    borderRadius: 15,
-    backgroundColor: '#9BEBFF',
+    padding: 8,
     opacity: 0.4,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.29,
-    shadowRadius: 4.65,
-    elevation: 7,
+    borderRadius: 100,
   },
 });
 

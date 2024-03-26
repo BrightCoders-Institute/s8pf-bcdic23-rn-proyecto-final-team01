@@ -1,20 +1,25 @@
-import {StyleSheet, TextInput, View, TouchableOpacity } from 'react-native';
-import React from 'react';
+import {
+  StyleSheet,
+  TextInput,
+  View,
+  TouchableOpacity,
+  FlatList,
+} from 'react-native';
+import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import Header from '../components/Header';
 import NavBar from '../components/NavBar';
 import {globalStyles} from '../theme/globalStyles';
 import Icon from 'react-native-vector-icons/Ionicons';
 import BarComponent from '../components/BarComponent';
-import FlatListComponent from '../components/FlatListComponent';
-
+import {getData} from '../hooks/getData';
+import CardComponent from '../components/CardComponent';
+import DataComponent from '../components/DataComponent';
+import TextComponent from '../components/TextComponent';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
-
-  const handleCardPress = () => {
-    navigation.navigate('EventDetailsScreen'); 
-  };
+  const [category, setCategory] = useState('Destacado');
 
   return (
     <View style={globalStyles.screen}>
@@ -32,9 +37,12 @@ const HomeScreen = () => {
           style={globalStyles.inputSecondary}
         />
       </View>
-      <BarComponent />
-
-      <FlatListComponent/>
+      <View style={{marginTop: 15, flex: 1}}>
+        <View style={{paddingBottom: 15}}>
+          <BarComponent setSelectedCategory={setCategory} />
+        </View>
+        <DataComponent category={category} />
+      </View>
       <NavBar />
     </View>
   );
