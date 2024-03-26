@@ -12,6 +12,13 @@ export const globalStyles = StyleSheet.create({
     alignItems: 'center',
   },
   inputPrimary: {
+    backgroundColor: '#CCCCCC',
+    borderRadius: 10,
+    paddingLeft: 15,
+    minWidth: 280,
+    color: '#040415',
+  },
+  disabledInput: {
     backgroundColor: '#F2F3F5',
     borderRadius: 10,
     paddingLeft: 15,
@@ -53,5 +60,21 @@ export const globalStyles = StyleSheet.create({
     shadowOpacity: 0.58,
     shadowRadius: 16.0,
     elevation: 24,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    // borderWidth: 1,
+    // borderColor: '#CCCCCC',
+    // borderRadius: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    marginBottom: 10,
+  },
+  rowContainerInput: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+    justifyContent: 'space-evenly'
   },
 });
