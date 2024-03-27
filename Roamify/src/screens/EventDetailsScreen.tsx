@@ -5,6 +5,7 @@ import ReviewComponent from '../components/ReviewComponent';
 import FabComponent from '../components/FabComponent';
 import {PropsNavigator} from '../navigation/Navigation';
 import InfoItem from '../components/InfoItem';
+import LikeButtonComponent from '../components/LikeButtonComponent';
 
 const EventDetailsScreen = ({navigation, route}: PropsNavigator) => {
   const {data} = route.params;
@@ -22,11 +23,16 @@ const EventDetailsScreen = ({navigation, route}: PropsNavigator) => {
         styles={{top: 10, left: 16}}
       />
       <View style={styles.container}>
-        <Image
-          source={{uri: data.image}}
-          style={styles.image}
-          resizeMode="cover"
-        />
+        <View style={styles.container}>
+          <Image
+            source={{uri: data.image}}
+            style={styles.image}
+            resizeMode="cover"
+          />
+          <View style={styles.containerHeart}>
+            <LikeButtonComponent/>
+          </View>
+        </View>
         <View style={styles.detailsContainer}>
           <TextComponent text={data.nameEvent} font="bold" size={28} />
           <InfoItem icon="location" eventData="Ver dirección en el mapa" />
@@ -87,6 +93,11 @@ const styles = StyleSheet.create({
     display: 'flex',
     width: '100%',
     height: '40%',
+  },
+  containerHeart: {
+    position: 'absolute',
+    bottom: 15,
+    left: '80%',
   },
 });
 
