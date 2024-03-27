@@ -28,12 +28,20 @@ const EventDetailsScreen = ({navigation, route}: PropsNavigator) => {
           resizeMode="cover"
         />
         <View style={styles.detailsContainer}>
-          <TextComponent text={data.nameEvent} font="bold" size={28} />
+          <TextComponent
+            text={!data.nameEvent ? data.name : data.nameEvent}
+            font="bold"
+            size={28}
+          />
           <InfoItem icon="location" eventData="Ver dirección en el mapa" />
-          <InfoItem icon="calendar" eventData={data.date} />
-          <InfoItem icon="time" eventData={'6:00 PM'} />
-          <InfoItem icon="cash" eventData={'$199.00'} />
-          <TextComponent text={data.descriptionEvent} />
+          {data.date && <InfoItem icon="calendar" eventData={data.date} />}
+          {data.time && <InfoItem icon="time" eventData={data.time} />}
+          {data.time && <InfoItem icon="cash" eventData={data.price} />}
+          <TextComponent
+            text={
+              !data.descriptionEvent ? data.description : data.descriptionEvent
+            }
+          />
         </View>
       </View>
       <View style={styles.detailsContainer}>
