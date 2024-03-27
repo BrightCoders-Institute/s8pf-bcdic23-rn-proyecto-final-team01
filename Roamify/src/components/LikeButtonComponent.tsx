@@ -10,8 +10,8 @@ const LikeButtonComponent = () => {
             <Pressable style={styles.press} onPress={() => setLiked((isLiked) => !isLiked)}>
                 <Icon
                     name={liked ? "heart" : "heart"}
-                    size={liked ? 40 : 40}
-                    color={liked ? 'red' : 'white'}
+                    size={liked ? 35 : 35}
+                    color={liked ? 'white' : 'white'}
                     style={liked ? styles.onPressStyle : styles.heart}
                 />
             </Pressable>
@@ -21,7 +21,7 @@ const LikeButtonComponent = () => {
 
 const styles = StyleSheet.create({
     heart: {
-        padding: 7,
+        padding: 10,
         borderRadius: 30,
         backgroundColor: 'rgba(128,128,128,0.8)',
     },
@@ -30,9 +30,9 @@ const styles = StyleSheet.create({
         borderRadius: 14,
     },
     onPressStyle: {
-        padding: 7,
+        padding: 10,
         borderRadius: 30,
-        backgroundColor: 'rgba(128,128,128,0.5)',
+        backgroundColor: 'rgba(255, 0, 0, 0.8)'
     }
 });
 

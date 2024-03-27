@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
   containerHeart: {
     position: 'absolute',
     bottom: 15,
-    left: '80%',
+    left: '81%',
   },
 });
 
