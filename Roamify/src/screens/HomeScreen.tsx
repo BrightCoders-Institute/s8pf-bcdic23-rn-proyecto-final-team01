@@ -41,7 +41,14 @@ const HomeScreen = () => {
         <View style={{paddingBottom: 15}}>
           <BarComponent setSelectedCategory={setCategory} />
         </View>
-        <DataComponent category={category} />
+        <DataComponent
+          category={category}
+          isPlace={
+            category !== 'Sociales' &&
+            category !== 'Festivos' &&
+            category !== 'Por Temporada'
+          }
+        />
       </View>
       <NavBar />
     </View>
