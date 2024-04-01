@@ -2,7 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import InputComponent from '../InputComponent';
 import LabelComponent from '../LabelComponent';
-import { InputLabelComponentProps } from '../types';
+import { InputLabelComponentProps } from './types';
 
 const InputLabelComponent = ({
     control,

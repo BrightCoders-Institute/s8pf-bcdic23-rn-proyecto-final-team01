@@ -36,27 +36,3 @@ export type userAuthProp = {
 export type ImageInputProps = {
     setIsLoading: Dispatch<SetStateAction<boolean>>;
 }
-
-export type InputWithIconComponentProps = {
-    control: any;
-    disabled: boolean;
-    setDisabled: Dispatch<SetStateAction<boolean>>;
-    name: string;
-    placeholder: string;
-    rules: object;
-    styles: object;
-    textLabel: string;
-    iconName?: string;
-    texInputDisabled: string;
-}
-
-export type InputLabelComponentProps = {
-    control: any;
-    name: string;
-    placeholder: string;
-    rules: object;
-    style: object;
-    textLabel: string;
-    secureTextEntry?: boolean;
-}
-

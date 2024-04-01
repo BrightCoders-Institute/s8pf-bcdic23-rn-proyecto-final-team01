@@ -8,9 +8,7 @@ import {
   Image,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import InputComponent from '../components/InputComponent';
 import { globalStyles } from '../theme/globalStyles';
-import LabelComponent from '../components/LabelComponent';
 import SectionComponent from '../components/SectionComponent';
 import ButtonComponent from '../components/ButtonComponent';
 import TextComponent from '../components/TextComponent';
@@ -23,6 +21,7 @@ import LoadingComponent from '../components/LoadingComponent';
 import { useAuth } from '../contexts/AuthContext';
 import InputLabelComponent from '../components/common/InputLabelComponent';
 import { userAuthProp } from '../components/types';
+import ModalForgetPass from '../components/authentication/ModalForgetPass';
 
 const AuthScreen = () => {
   const [variant, setVariant] = useState<'LOGIN' | 'REGISTER'>('LOGIN');
@@ -30,6 +29,7 @@ const AuthScreen = () => {
   const logo = require('../assets/logo.jpg');
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
+  const [modalForgetPassVisible, setModalForgetPassVisible] = useState(false);
   const { setPasswordOnLogin } = useAuth();
 
   const schema = useMemo(() => yup.object().shape({
@@ -144,10 +144,6 @@ const AuthScreen = () => {
       });
   };
 
-  const handleForgetPassword = () => {
-    
-  }
-
   const handleVariant = () => {
     setVariant(prevVariant => (prevVariant === 'LOGIN' ? 'REGISTER' : 'LOGIN'));
   };
@@ -161,6 +157,15 @@ const AuthScreen = () => {
       handleRegister({ name, email, password });
     }
   };
+
+  const handleForgetPassword = () => {
+    setModalForgetPassVisible(true);
+  };
+
+  const handleCloseModalForgetPass = () => {
+    setModalForgetPassVisible(false);
+  };
+
 
   return (
     <>
@@ -217,13 +222,6 @@ const AuthScreen = () => {
                   rules={{ required: 'la contraseña es requerido' }}
                   textLabel={'Contraseña'}
                 />
-                {variant === 'LOGIN' &&
-                  <View style={styles.text}>
-                    <TouchableOpacity onPress={handleForgetPassword}>
-                      <Text style={styles.textLink}>'¿Olvidaste tu contraseña?'</Text>
-                    </TouchableOpacity>
-                  </View>
-                }
                 <ButtonComponent
                   text={variant === 'LOGIN' ? 'LOGIN' : 'REGISTRARSE'}
                   styles={[globalStyles.buttonPrimary, { marginVertical: 10 }]}
@@ -246,9 +244,21 @@ const AuthScreen = () => {
                   </Text>
                 </TouchableOpacity>
               </View>
+              {variant === 'LOGIN' &&
+                <View style={styles.text}>
+                  <TouchableOpacity onPress={handleForgetPassword}>
+                    <Text style={styles.textLink}>¿Olvidaste tu contraseña?</Text>
+                  </TouchableOpacity>
+                </View>
+              }
             </View>
           </View>
+          <ModalForgetPass
+            visible={modalForgetPassVisible}
+            onClose={handleCloseModalForgetPass}
+          />
         </ImageBackground>
+
       </View>
     </>
   );
