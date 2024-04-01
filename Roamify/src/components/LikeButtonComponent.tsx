@@ -1,24 +1,61 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Pressable, View, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import firestore from '@react-native-firebase/firestore';
 
 const LikeButtonComponent = () => {
-    const [liked, setLiked] = useState<boolean>(false);
+    const [liked, setLiked] = useState<boolean>();
+
+    useEffect(() => {
+        const checkInitialLikeState = async () => {
+            try {
+                const favoritosRef = firestore().collection('favorites');
+                const snapshot = await favoritosRef.doc('unique_document_id').get();
+                const data = snapshot.data();
+                if (data && data.liked) {
+                    setLiked(true);
+                }
+            } catch (error) {
+                console.error('Error al verificar el estado inicial del like: ' + error);
+            }
+        };
+
+        checkInitialLikeState();
+    }, []); 
+
+    const handleLikePress = async () => {
+        try {
+            const favoritosRef = firestore().collection('favorites');
+
+            if (liked) {
+                await favoritosRef.doc('unique_document_id').delete();
+            } else {
+                await favoritosRef.doc('unique_document_id').set({
+                    liked: true,
+                    timestamp: firestore.FieldValue.serverTimestamp()
+                });
+            }
+
+            // Después de manejar el like, actualizamos el estado local
+            setLiked((isLiked) => !isLiked);
+        } catch (error) {
+            console.error('Error al manejar el like: ' + error);
+        }
+    };
 
     return(
         <View>
-            <Pressable style={styles.press} onPress={() => setLiked((isLiked) => !isLiked)}>
+            <Pressable style={styles.press} onPress={handleLikePress}>
                 <Icon
                     name={liked ? "heart" : "heart"}
-                    size={liked ? 35 : 35}
-                    color={liked ? 'white' : 'white'}
-                    style={liked ? styles.onPressStyle : styles.heart}
+                    size={35}
+                    color={liked ? 'red' : 'white'}
+                    style={styles.heart}
                 />
             </Pressable>
         </View>
     );
 };
-
 const styles = StyleSheet.create({
     heart: {
         padding: 10,
