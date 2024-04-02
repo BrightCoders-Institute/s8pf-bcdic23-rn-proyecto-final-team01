@@ -166,7 +166,6 @@ const AuthScreen = () => {
     setModalForgetPassVisible(false);
   };
 
-
   return (
     <>
       {
@@ -256,9 +255,9 @@ const AuthScreen = () => {
           <ModalForgetPass
             visible={modalForgetPassVisible}
             onClose={handleCloseModalForgetPass}
+            setModalForgetPassVisible={setModalForgetPassVisible}
           />
         </ImageBackground>
-
       </View>
     </>
   );

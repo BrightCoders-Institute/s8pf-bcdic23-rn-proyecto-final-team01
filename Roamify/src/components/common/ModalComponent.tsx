@@ -22,12 +22,15 @@ const ModalComponent = ({ visible, onClose, children, aceptar }: ModalComponentP
               <View style={styles.buttonContainer}>
                 <ButtonComponent
                   text={'Cancelar'}
-                  styles={[globalStyles.buttonPrimary, { backgroundColor: '#CCCCCC' }]}
+                  styles={[
+                    globalStyles.buttonPrimary,
+                    {width: 125, backgroundColor: '#CCCCCC'}
+                  ]}
                   onPress={onClose}
                 />
                 <ButtonComponent
                   text={'Aceptar'}
-                  styles={globalStyles.buttonPrimary}
+                  styles={[globalStyles.buttonPrimary, {width: 125}]}
                   onPress={aceptar}
                 />
               </View>
@@ -62,8 +65,8 @@ const styles = StyleSheet.create({
     padding: 5,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    borderTopWidth: 1,
-    borderTopColor: '#CCCCCC',
+    // borderTopWidth: 1,
+    // borderTopColor: '#CCCCCC',
     paddingVertical: 10,
   },
 });
