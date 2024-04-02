@@ -8,9 +8,7 @@ import {
   Image,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import InputComponent from '../components/InputComponent';
 import { globalStyles } from '../theme/globalStyles';
-import LabelComponent from '../components/LabelComponent';
 import SectionComponent from '../components/SectionComponent';
 import ButtonComponent from '../components/ButtonComponent';
 import TextComponent from '../components/TextComponent';
@@ -21,6 +19,9 @@ import firebase from '@react-native-firebase/firestore';
 import * as yup from 'yup';
 import LoadingComponent from '../components/LoadingComponent';
 import { useAuth } from '../contexts/AuthContext';
+import InputLabelComponent from '../components/common/InputLabelComponent';
+import { userAuthProp } from '../components/types';
+import ModalForgetPass from '../components/authentication/ModalForgetPass';
 
 const AuthScreen = () => {
   const [variant, setVariant] = useState<'LOGIN' | 'REGISTER'>('LOGIN');
@@ -28,6 +29,7 @@ const AuthScreen = () => {
   const logo = require('../assets/logo.jpg');
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
+  const [modalForgetPassVisible, setModalForgetPassVisible] = useState(false);
   const { setPasswordOnLogin } = useAuth();
 
   const schema = useMemo(() => yup.object().shape({
@@ -70,7 +72,7 @@ const AuthScreen = () => {
     },
   });
 
-  const handleLogin = (email, password) => {
+  const handleLogin = ({ email, password }: userAuthProp) => {
     setLoading(true);
     auth()
       .signInWithEmailAndPassword(email, password)
@@ -103,7 +105,7 @@ const AuthScreen = () => {
       });
   };
 
-  const handleRegister = (name, email, password) => {
+  const handleRegister = ({ name, email, password }: userAuthProp) => {
     setLoading(true);
     auth()
       .createUserWithEmailAndPassword(email, password)
@@ -142,7 +144,6 @@ const AuthScreen = () => {
       });
   };
 
-
   const handleVariant = () => {
     setVariant(prevVariant => (prevVariant === 'LOGIN' ? 'REGISTER' : 'LOGIN'));
   };
@@ -151,10 +152,18 @@ const AuthScreen = () => {
     const values = getValues();
     const { name, email, password } = values;
     if (variant === 'LOGIN') {
-      handleLogin(email, password);
+      handleLogin({ email, password });
     } else {
-      handleRegister(name, email, password);
+      handleRegister({ name, email, password });
     }
+  };
+
+  const handleForgetPassword = () => {
+    setModalForgetPassVisible(true);
+  };
+
+  const handleCloseModalForgetPass = () => {
+    setModalForgetPassVisible(false);
   };
 
   return (
@@ -186,50 +195,39 @@ const AuthScreen = () => {
               />
               <SectionComponent>
                 {variant === 'REGISTER' && (
-                  <View>
-                    <LabelComponent text="Nombre" required />
-                    <InputComponent
-                      name="name"
-                      placeholder="Escribe tu nombre"
-                      style={globalStyles.inputPrimary}
-                      control={control}
-                      rules={{ required: 'El nombre es requerido' }}
-                    />
-                  </View>
+                  <InputLabelComponent
+                    name="name"
+                    placeholder="Escribe tu nombre"
+                    style={globalStyles.inputPrimary}
+                    control={control}
+                    rules={{ required: 'El nombre es requerido' }}
+                    textLabel={'Nombre'}
+                  />
                 )}
-                <View style={{ display: 'flex', flexDirection: 'column' }}>
-                  <LabelComponent text="Email" required />
-                  <InputComponent
-                    name="email"
-                    placeholder="Escribe tu email"
-                    style={globalStyles.inputPrimary}
-                    control={control}
-                    rules={{ required: 'El email es requerido' }}
-                  />
-                </View>
-                <View style={{ display: 'flex', flexDirection: 'column' }}>
-                  <LabelComponent text="Contraseña" required />
-                  <InputComponent
-                    name="password"
-                    placeholder="Escribe tu contraseña"
-                    style={globalStyles.inputPrimary}
-                    secureTextEntry
-                    control={control}
-                    rules={{ required: 'la contraseña es requerido' }}
-                  />
-                </View>
+                <InputLabelComponent
+                  name="email"
+                  placeholder="Escribe tu email"
+                  style={globalStyles.inputPrimary}
+                  control={control}
+                  rules={{ required: 'El email es requerido' }}
+                  textLabel={'Email'}
+                />
+                <InputLabelComponent
+                  name="password"
+                  placeholder="Escribe tu contraseña"
+                  style={globalStyles.inputPrimary}
+                  secureTextEntry
+                  control={control}
+                  rules={{ required: 'la contraseña es requerido' }}
+                  textLabel={'Contraseña'}
+                />
                 <ButtonComponent
                   text={variant === 'LOGIN' ? 'LOGIN' : 'REGISTRARSE'}
                   styles={[globalStyles.buttonPrimary, { marginVertical: 10 }]}
                   onPress={handleSubmit(onSubmit)}
                 />
               </SectionComponent>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'center',
-                  marginVertical: 10,
-                }}>
+              <View style={[styles.text, { marginVertical: 10 }]}>
                 <TextComponent
                   text={
                     variant === 'LOGIN'
@@ -240,14 +238,25 @@ const AuthScreen = () => {
                   size={14}
                 />
                 <TouchableOpacity onPress={handleVariant}>
-                  <Text
-                    style={{ color: '#47C6E6', textDecorationLine: 'underline' }}>
+                  <Text style={styles.textLink}>
                     {variant === 'LOGIN' ? 'Regístrate' : 'Iniciar sesión'}
                   </Text>
                 </TouchableOpacity>
               </View>
+              {variant === 'LOGIN' &&
+                <View style={styles.text}>
+                  <TouchableOpacity onPress={handleForgetPassword}>
+                    <Text style={styles.textLink}>¿Olvidaste tu contraseña?</Text>
+                  </TouchableOpacity>
+                </View>
+              }
             </View>
           </View>
+          <ModalForgetPass
+            visible={modalForgetPassVisible}
+            onClose={handleCloseModalForgetPass}
+            setModalForgetPassVisible={setModalForgetPassVisible}
+          />
         </ImageBackground>
       </View>
     </>
@@ -305,6 +314,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     opacity: 0.5,
   },
+  textLink: {
+    color: '#47C6E6',
+    textDecorationLine: 'underline'
+  },
+  text: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  }
 });
 
 export default AuthScreen;
