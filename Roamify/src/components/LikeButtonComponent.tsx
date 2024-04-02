@@ -3,6 +3,7 @@ import { Pressable, View, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import firestore from '@react-native-firebase/firestore';
 
+
 const LikeButtonComponent = () => {
     const [liked, setLiked] = useState<boolean>();
 
@@ -10,7 +11,7 @@ const LikeButtonComponent = () => {
         const checkInitialLikeState = async () => {
             try {
                 const favoritosRef = firestore().collection('favorites');
-                const snapshot = await favoritosRef.doc('unique_document_id').get();
+                const snapshot = await favoritosRef.doc('userId').get();
                 const data = snapshot.data();
                 if (data && data.liked) {
                     setLiked(true);
@@ -28,9 +29,9 @@ const LikeButtonComponent = () => {
             const favoritosRef = firestore().collection('favorites');
 
             if (liked) {
-                await favoritosRef.doc('unique_document_id').delete();
+                await favoritosRef.doc('userId').delete();
             } else {
-                await favoritosRef.doc('unique_document_id').set({
+                await favoritosRef.doc('userId').set({
                     liked: true,
                     timestamp: firestore.FieldValue.serverTimestamp()
                 });
@@ -74,3 +75,4 @@ const styles = StyleSheet.create({
 });
 
 export default LikeButtonComponent;
+
