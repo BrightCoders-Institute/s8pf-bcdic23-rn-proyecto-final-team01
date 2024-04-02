@@ -17,9 +17,7 @@ const FavoritesScreen = () => {
         size={25}
         styles={{paddingLeft: 25, paddingVertical: 15}}
       />
-      <CardContainer>
-        <View></View>
-      </CardContainer>
+      <View style={{flex: 1}}></View>
       <NavBar />
     </View>
   );

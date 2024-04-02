@@ -42,7 +42,6 @@ export const globalStyles = StyleSheet.create({
     paddingHorizontal: 20,
     backgroundColor: '#47C6E6',
     borderRadius: 10,
-    marginHorizontal: 10,
   },
   buttonShadow: {
     display: 'flex',
@@ -64,9 +63,6 @@ export const globalStyles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    // borderWidth: 1,
-    // borderColor: '#CCCCCC',
-    // borderRadius: 5,
     paddingHorizontal: 10,
     paddingVertical: 5,
     marginBottom: 10,
