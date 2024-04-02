@@ -6,12 +6,11 @@ import {useNavigation} from '@react-navigation/native';
 
 interface Props {
   category: string;
-  isEvent?: boolean;
   isPlace?: boolean;
 }
 
 const DataComponent = (props: Props) => {
-  const {category, isEvent, isPlace} = props;
+  const {category, isPlace} = props;
 
   const navigation = useNavigation();
   const [events, setEvents] = useState<Array<any>>();
@@ -33,20 +32,20 @@ const DataComponent = (props: Props) => {
   return (
     <FlatList
       style={{paddingHorizontal: 25}}
-      data={events}
-      renderItem={({item: event}) =>
-        category === event.category && (
+      data={isPlace ? places : events}
+      renderItem={({item}) =>
+        category === item.category && (
           <CardComponent
             onPress={() =>
               /* @ts-ignore */
               navigation.navigate('EventDetailsScreen', {
-                data: event,
+                data: item,
               })
             }
-            key={event.nameEvent}
-            name={event.nameEvent}
-            description={event.descriptionEvent}
-            image={event.image}
+            key={isPlace ? item.name : item.nameEvent}
+            name={isPlace ? item.name : item.nameEvent}
+            description={isPlace ? item.description : item.descriptionEvent}
+            image={item.image}
           />
         )
       }
