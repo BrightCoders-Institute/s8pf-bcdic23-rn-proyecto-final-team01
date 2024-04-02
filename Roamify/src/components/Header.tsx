@@ -1,15 +1,31 @@
-import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
 import { globalStyles } from '../theme/globalStyles';
 import TextComponent from './TextComponent';
 import {useNavigation} from '@react-navigation/native';
+import auth from '@react-native-firebase/auth';
+import { fetchImageUrl } from '.';
+
 
 const Header = () => {
-
+  const navigation = useNavigation();
   const [menuVisible, setMenuVisible] = useState(false);
-  const handlePress = (route) => {
-    setMenuVisible(false);
-  };
+  const [userId, setUserId] = useState<null | string>(null);
+  const [userImageUrl, setUserImageUrl] = useState('https://firebasestorage.googleapis.com/v0/b/roamify-bb95e.appspot.com/o/profileImage%2Fdef-user.png?alt=media&token=81013ded-4e5d-4b0b-8c6b-1d349fa42ee9');
+  useEffect(() => {
+    const unsubscribe = auth().onAuthStateChanged(user => {
+      if (user) {
+        setUserId(user.uid);
+        fetchImageUrl(user.uid).then(url => {
+          setUserImageUrl(url);
+        }).catch(error => console.log(error));
+      } else {
+        setUserId(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   return (
     <View style={styles.headerContainer}>
@@ -18,7 +34,8 @@ const Header = () => {
         <TextComponent text='Roamify' size={32} font='bold'/>
       </View>
       <TouchableOpacity onPress={() => setMenuVisible(!menuVisible)} style={styles.profileContainer}>
-        <Image source={require('../assets/user.png')} style={styles.avatar} />
+        {/* Aquí se actualiza el source para utilizar userImageUrl */}
+        <Image source={userImageUrl ? {uri: userImageUrl} : require('../assets/user.png')} style={styles.avatar} />
         
       </TouchableOpacity>
       {menuVisible && (
@@ -26,11 +43,16 @@ const Header = () => {
           <TouchableOpacity onPress={() => navigation.navigate('ProfileScreen')} style={styles.dropdownItem}>
             <Text style={styles.dropdownText}>Configuración</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => handlePress('LogOut')} style={styles.dropdownItem}>
-            <Text style={styles.dropdownText}>Cerrar sesión</Text>
-          </TouchableOpacity>
+           <TouchableOpacity onPress={() => 
+             {
+              auth()
+               .signOut()
+               .then(() => navigation.navigate('AuthScreen'));
+             }} style={styles.dropdownItem}>
+             <Text style={styles.dropdownText} >Cerrar sesión</Text>
+           </TouchableOpacity>
         </View>
-      )}
+       )}
     </View>
   );
 };
