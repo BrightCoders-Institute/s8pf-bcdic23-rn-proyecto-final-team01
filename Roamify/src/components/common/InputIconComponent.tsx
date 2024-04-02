@@ -4,7 +4,7 @@ import InputComponent from '../InputComponent';
 import { globalStyles } from '../../theme/globalStyles';
 import LabelComponent from '../LabelComponent';
 import Icon from 'react-native-vector-icons/Entypo';
-import { InputWithIconComponentProps } from '../types';
+import { InputWithIconComponentProps } from './types';
 
 const InputWithIconComponent = ({
     control,

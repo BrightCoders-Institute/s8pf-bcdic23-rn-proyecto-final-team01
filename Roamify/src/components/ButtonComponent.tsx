@@ -1,8 +1,7 @@
 import React from 'react';
 import TextComponent from './TextComponent';
-import {globalStyles} from '../theme/globalStyles';
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import {StyleProp, ViewStyle} from 'react-native';
+import { globalStyles } from '../theme/globalStyles';
+import { StyleProp, TouchableOpacity, ViewStyle } from 'react-native';
 
 interface Props {
   text: string;
@@ -12,7 +11,7 @@ interface Props {
 }
 
 const ButtonComponent = (props: Props) => {
-  const {text, onPress, styles, disabled} = props;
+  const { text, onPress, styles, disabled } = props;
 
   return (
     <TouchableOpacity
