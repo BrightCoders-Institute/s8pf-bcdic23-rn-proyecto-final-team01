@@ -2,13 +2,12 @@ import firestore from '@react-native-firebase/firestore';
 
 export const getData = async () => {
   try {
-    const events = await firestore().collection('events').get();
-    const eventsData = events.docs.map(doc => doc.data());
-
-    const places = await firestore().collection('places').get();
-    const placesData = places.docs.map(place => place.data());
-
-    return {eventsData, placesData};
+    const location = await firestore().collection('locations').get();
+    const locationData = await location.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    return {locationData};
   } catch (error) {
     console.error('Error fetching the items: ' + error);
   }
