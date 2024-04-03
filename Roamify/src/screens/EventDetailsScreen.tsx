@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import {View, Image, StyleSheet, ScrollView} from 'react-native';
 import TextComponent from '../components/TextComponent';
 import FabComponent from '../components/FabComponent';
@@ -7,12 +7,35 @@ import CommentComponent from '../components/CommentComponent';
 import firestore from '@react-native-firebase/firestore';
 import ReviewComponent from '../components/ReviewComponent';
 import {useAuth} from '../contexts/AuthContext';
+
 import MapsEventDetailsComponent from '../components/googlemaps/MapsEventDetailsComponent';
 import axios from 'axios';
 
 /* @ts-ignore */
 const EventDetailsScreen = ({navigation, route}) => {
   const {data} = route.params;
+  const [direccion, setDireccion] = useState('');
+  const obtenerDireccionOSM = async (lat, lon) => {
+    const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`;
+
+    try {
+      const response = await axios.get(url);
+      if (response.data && response.data.display_name) {
+        setDireccion(response.data.display_name);
+      } else {
+        setDireccion('Dirección no encontrada');
+      }
+    } catch (error) {
+      console.warn('Error obteniendo la dirección: ', error);
+      setDireccion('Error al obtener la dirección');
+    }
+  };
+  useEffect(() => {
+    if (data?.map?.latitude && data?.map?.longitude) {
+      obtenerDireccionOSM(data.map.latitude, data.map.longitude);
+    }
+  }, [data.map]);
+
 
   const currentUser = useAuth().userId;
 
@@ -97,9 +120,9 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   mapContainer: {
-    padding: 80,
-    borderRadius: 15,
-    overflow: 'hidden',
+    padding: 80, 
+    borderRadius: 15, 
+    overflow: 'hidden', 
     margin: 20,
     shadowColor: '#000',
     shadowOffset: {
