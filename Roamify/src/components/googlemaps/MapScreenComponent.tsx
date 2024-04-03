@@ -1,32 +1,34 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import React, {useEffect, useState} from 'react';
+import {StyleSheet, View} from 'react-native';
+import MapView, {Marker} from 'react-native-maps';
 import firestore from '@react-native-firebase/firestore';
 interface Marker {
-    latitude: number;
-    longitude: number;
-    title: string;
- }
+  latitude: number;
+  longitude: number;
+  title: string;
+  type: string;
+}
 const MapScreenComponent = () => {
   const [markers, setMarkers] = useState<Marker[]>([]);
   const [selectedRegion, setSelectedRegion] = useState({
-    latitude: 19.123030, 
-    longitude: -104.325359, 
+    latitude: 19.12303,
+    longitude: -104.325359,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.05,
-  })
+  });
   useEffect(() => {
     const unsubscribe = firestore()
-      .collection('events') 
+      .collection('locations')
       .onSnapshot(querySnapshot => {
         const _markers = querySnapshot.docs.map(doc => {
           const data = doc.data();
-          const mapData = data.map; 
+          const mapData = data.map;
 
           return {
             latitude: mapData.latitude as number,
             longitude: mapData.longitude as number,
-            title: data.nameEvent as string, 
+            title: data.name as string,
+            type: data.type as string,
           };
         });
         setMarkers(_markers);
@@ -36,12 +38,15 @@ const MapScreenComponent = () => {
 
   return (
     <View style={styles.container}>
-      <MapView style={styles.map} 
-      initialRegion={selectedRegion}>
+      <MapView style={styles.map} initialRegion={selectedRegion}>
         {markers.map((marker, index) => (
           <Marker
             key={index}
-            coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
+            pinColor={marker.type === 'event' ? 'blue' : 'red'}
+            coordinate={{
+              latitude: marker.latitude,
+              longitude: marker.longitude,
+            }}
             title={marker.title}
           />
         ))}

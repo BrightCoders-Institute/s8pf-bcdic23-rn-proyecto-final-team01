@@ -3,7 +3,9 @@ import React from 'react';
 import TextComponent from './TextComponent';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import AverageGrade from './AverageGrade';
 interface Props {
+  id: string;
   name: string;
   description: string;
   image: string;
@@ -12,7 +14,7 @@ interface Props {
 }
 
 const CardComponent = (props: Props) => {
-  const {name, description, image, favorite, onPress} = props;
+  const {id, name, description, image, favorite, onPress} = props;
 
   const renderDescription = (text: string) => {
     const words = text.split(' ');
@@ -33,8 +35,9 @@ const CardComponent = (props: Props) => {
       />
       <View style={styles.textContainer}>
         <View style={styles.tittleContainer}>
-          <TextComponent text={name} font="bold" size={26} />
+          <TextComponent text={name} font="bold" size={24} />
         </View>
+        <AverageGrade id={id} />
         <TextComponent text={`${limitedDescription}...`} />
       </View>
     </TouchableOpacity>
@@ -61,8 +64,8 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     gap: 5,
-    paddingHorizontal: 15,
-    paddingVertical: 35,
+    padding: 25,
+    justifyContent: 'flex-start',
   },
   tittleContainer: {
     display: 'flex',
