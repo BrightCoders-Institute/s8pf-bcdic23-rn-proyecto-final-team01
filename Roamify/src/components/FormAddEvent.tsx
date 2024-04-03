@@ -16,9 +16,9 @@ import {useNavigation} from '@react-navigation/native';
 import InputCategory from './InputCategory';
 
 const schemaAddEvent = yup.object().shape({
-  nameEvent: yup.string().required('Nombre del evento es requerido'),
+  name: yup.string().required('Nombre del evento es requerido'),
   image: yup.string(),
-  descriptionEvent: yup.string().required('La descripción es requerida'),
+  description: yup.string().required('La descripción es requerida'),
   date: yup.string(),
   category: yup.string(),
   map: yup.object().required('Selecciona una ubicación válida'),
@@ -71,23 +71,24 @@ const FormAddEvent = ({location, setLocation, setIsLoading}) => {
   values.category = selectedCategory;
   console.log('Valores: ' + values.category);
 
-  const onSubmit = async () => {
+  const onSubmit = () => {
     setIsLoading(true);
     const values = getValues();
-    const {nameEvent, descriptionEvent, image, date, map, limitedCapacity} =
-      values;
+    const {name, description, image, date, map, limitedCapacity} = values;
     const category = selectedCategory;
+    const type = 'event';
     try {
       firestore()
-        .collection('events')
+        .collection('locations')
         .add({
-          nameEvent,
-          descriptionEvent,
+          name,
+          description,
           image: link,
           date: selectedDate,
           category,
           map,
           limitedCapacity: isChecked,
+          type,
         })
         .then(() => {
           console.log('Event added!');
@@ -111,7 +112,7 @@ const FormAddEvent = ({location, setLocation, setIsLoading}) => {
         control={control}
         setValue={setValue}
         errors={errors}
-        name="nameEvent"
+        name="name"
       />
       <TextComponent text="Selecciona una foto de portada" />
       <ImagePickerComponent setDownloadLink={handleSetLink} />
@@ -139,7 +140,7 @@ const FormAddEvent = ({location, setLocation, setIsLoading}) => {
         control={control}
         setValue={setValue}
         errors={errors}
-        name="descriptionEvent"
+        name="description"
       />
       <TextComponent text="Costo del evento (Opcional)" />
       <TextComponent text="Capacidad limitada" />
@@ -160,6 +161,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     gap: 10,
+    marginBottom: 35,
   },
 });
 
