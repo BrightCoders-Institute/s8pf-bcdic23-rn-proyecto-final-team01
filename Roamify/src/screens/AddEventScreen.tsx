@@ -1,4 +1,4 @@
-import {View, Text} from 'react-native';
+import {View, ScrollView} from 'react-native';
 import React, {useState} from 'react';
 import Header from '../components/Header';
 import {globalStyles} from '../theme/globalStyles';
@@ -21,13 +21,13 @@ const AddEventScreen = () => {
         <View style={{paddingHorizontal: 25}}>
           <TextComponent text="Crear un evento" font="bold" size={26} />
         </View>
-        <CardContainer>
+        <ScrollView style={{paddingHorizontal: 25}}>
           <FormAddEvent
             location={location}
             setLocation={setLocation}
             setIsLoading={setIsLoading}
           />
-        </CardContainer>
+        </ScrollView>
       </View>
     </>
   );
