@@ -54,7 +54,7 @@ const EventDetailsScreen = ({navigation, route}: PropsNavigator) => {
             resizeMode="cover"
           />
           <View style={styles.containerHeart}>
-            <LikeButtonComponent/>
+            <LikeButtonComponent eventName={!data.nameEvent ? data.name : data.nameEvent} />
           </View>
         </View>
         <View style={styles.detailsContainer}>

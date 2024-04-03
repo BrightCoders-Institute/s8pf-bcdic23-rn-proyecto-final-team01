@@ -2,49 +2,51 @@ import React, { useState, useEffect } from "react";
 import { Pressable, View, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import firestore from '@react-native-firebase/firestore';
+import { useAuth } from '../contexts/AuthContext';
 
-
-const LikeButtonComponent = () => {
-    const [liked, setLiked] = useState<boolean>();
+const LikeButtonComponent = ({eventName}) => {
+    console.log(eventName);
+    const userId = '5AuDsy0wxWcLXeur0lY854A16MI2';
+    const [liked, setLiked] = useState<boolean>(false);
 
     useEffect(() => {
         const checkInitialLikeState = async () => {
             try {
-                const favoritosRef = firestore().collection('favorites');
-                const snapshot = await favoritosRef.doc('userId').get();
-                const data = snapshot.data();
-                if (data && data.liked) {
+                const favoriteRef = firestore().collection('users').doc(userId).collection('favorites').doc(eventName);
+                const doc = await favoriteRef.get();
+                if (doc.exists) {
                     setLiked(true);
                 }
             } catch (error) {
-                console.error('Error al verificar el estado inicial del like: ' + error);
+                console.error('Error al verificar el estado inicial del like: ', error);
             }
         };
 
         checkInitialLikeState();
-    }, []); 
+    }, [eventName, userId]);
 
     const handleLikePress = async () => {
         try {
-            const favoritosRef = firestore().collection('favorites');
+            const favoriteRef = firestore().collection('users').doc(userId).collection('favorites').doc(eventName);
 
             if (liked) {
-                await favoritosRef.doc('userId').delete();
+                await favoriteRef.delete();
             } else {
-                await favoritosRef.doc('userId').set({
+                await favoriteRef.set({
                     liked: true,
-                    timestamp: firestore.FieldValue.serverTimestamp()
                 });
             }
 
-            // Después de manejar el like, actualizamos el estado local
-            setLiked((isLiked) => !isLiked);
+            setLiked(!liked);
         } catch (error) {
-            console.error('Error al manejar el like: ' + error);
+            console.error('Error al manejar el like: ', error);
         }
     };
+    if (!eventName) {
+        return null; 
+    }
 
-    return(
+    return (
         <View>
             <Pressable style={styles.press} onPress={handleLikePress}>
                 <Icon
@@ -57,6 +59,7 @@ const LikeButtonComponent = () => {
         </View>
     );
 };
+
 const styles = StyleSheet.create({
     heart: {
         padding: 10,
