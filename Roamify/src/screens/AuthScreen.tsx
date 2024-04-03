@@ -47,26 +47,6 @@ const AuthScreen = () => {
       .required('La contraseña es requerida'),
   }), [variant]);
 
-  const schema = useMemo(
-    () =>
-      yup.object().shape({
-        email: yup.string().email().required('El email es requerido'),
-        name:
-          variant === 'REGISTER'
-            ? yup
-                .string()
-                .min(3, 'El nombre debe tener al menos 3 caracteres')
-                .max(70, 'El nombre debe tener máximo 70 caracteres')
-                .required('El nombre es requerido')
-            : yup.string(),
-        password: yup
-          .string()
-          .min(6, 'La contraseña debe tener al menos 6 caracteres')
-          .max(12, 'La contraseña debe tener máximo 12 caracteres')
-          .required('La contraseña es requerida'),
-      }),
-    [variant],
-  );
 
   const {handleSubmit, setError, control, getValues} = useForm<FormData>({
     resolver: async data => {
