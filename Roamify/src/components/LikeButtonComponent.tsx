@@ -5,8 +5,7 @@ import firestore from '@react-native-firebase/firestore';
 import { useAuth } from '../contexts/AuthContext';
 
 const LikeButtonComponent = ({eventName}) => {
-    console.log(eventName);
-    const userId = '5AuDsy0wxWcLXeur0lY854A16MI2';
+    const { userId } = useAuth();
     const [liked, setLiked] = useState<boolean>(false);
 
     useEffect(() => {
