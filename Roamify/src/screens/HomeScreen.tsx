@@ -1,24 +1,13 @@
-import {
-  StyleSheet,
-  TextInput,
-  View,
-  TouchableOpacity,
-  FlatList,
-} from 'react-native';
+import {StyleSheet, TextInput, View} from 'react-native';
 import React, {useState} from 'react';
-import {useNavigation} from '@react-navigation/native';
 import Header from '../components/Header';
 import NavBar from '../components/NavBar';
 import {globalStyles} from '../theme/globalStyles';
 import Icon from 'react-native-vector-icons/Ionicons';
 import BarComponent from '../components/BarComponent';
-import {getData} from '../hooks/getData';
-import CardComponent from '../components/CardComponent';
 import DataComponent from '../components/DataComponent';
-import TextComponent from '../components/TextComponent';
 
 const HomeScreen = () => {
-  const navigation = useNavigation();
   const [category, setCategory] = useState('Destacado');
 
   return (
@@ -41,14 +30,7 @@ const HomeScreen = () => {
         <View style={{paddingBottom: 15}}>
           <BarComponent setSelectedCategory={setCategory} />
         </View>
-        <DataComponent
-          category={category}
-          isPlace={
-            category !== 'Sociales' &&
-            category !== 'Festivos' &&
-            category !== 'Por Temporada'
-          }
-        />
+        <DataComponent category={category} />
       </View>
       <NavBar />
     </View>

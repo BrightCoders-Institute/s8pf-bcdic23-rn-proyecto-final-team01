@@ -15,17 +15,18 @@ const Stack = createStackNavigator();
 
 export interface PropsNavigator extends StackScreenProps<any, any> {}
 
-const StackNavigation = () => {
+const StackNavigation = ({initialRoute}: {initialRoute: string}) => {
   return (
     <NavigationContainer>
       <AuthProvider>
         <Stack.Navigator
+          initialRouteName={initialRoute}
           screenOptions={{
             headerShown: false,
           }}>
+          <Stack.Screen name="AuthScreen" component={AuthScreen} />
           <Stack.Screen name="HomeScreen" component={HomeScreen} />
           <Stack.Screen name="MapScreen" component={MapScreen} />
-          <Stack.Screen name="AuthScreen" component={AuthScreen} />
           <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
           <Stack.Screen name="AddEventScreen" component={AddEventScreen} />
           <Stack.Screen name="MyEventsScreen" component={MyEventsScreen} />

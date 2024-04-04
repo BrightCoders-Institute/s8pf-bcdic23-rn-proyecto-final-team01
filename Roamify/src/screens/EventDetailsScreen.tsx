@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import {View, Image, StyleSheet, ScrollView} from 'react-native';
 import TextComponent from '../components/TextComponent';
-import ReviewComponent from '../components/ReviewComponent';
 import FabComponent from '../components/FabComponent';
-import {PropsNavigator} from '../navigation/Navigation';
 import InfoItem from '../components/InfoItem';
 import LikeButtonComponent from '../components/LikeButtonComponent';
+import CommentComponent from '../components/CommentComponent';
+import firestore from '@react-native-firebase/firestore';
+import ReviewComponent from '../components/ReviewComponent';
+import {useAuth} from '../contexts/AuthContext';
 import MapsEventDetailsComponent from '../components/googlemaps/MapsEventDetailsComponent';
 import axios from 'axios';
 
-const EventDetailsScreen = ({navigation, route}: PropsNavigator) => {
+/* @ts-ignore */
+const EventDetailsScreen = ({navigation, route}) => {
   const {data} = route.params;
   const [direccion, setDireccion] = useState('');
   const obtenerDireccionOSM = async (lat, lon) => {
@@ -34,11 +37,39 @@ const EventDetailsScreen = ({navigation, route}: PropsNavigator) => {
   }, [data.map]);
 
 
-  if (!route.params) {
-    return null;
-  }
+  const currentUser = useAuth().userId;
+
+  const [reviews, setReviews] = useState<Array<any>>();
+  const [hasCommented, setHasCommented] = useState(false);
+
+  const id = data.id;
+
+  useEffect(() => {
+    const subscriber = firestore()
+      .collection('locations')
+      .doc(id)
+      .collection('reviews')
+      .onSnapshot(querySnapshot => {
+        const reviewsArray = [];
+        querySnapshot.forEach(documentSnapshot => {
+          const reviewData = documentSnapshot.data();
+          reviewsArray.push({
+            ...reviewData,
+            id: documentSnapshot.id,
+            hasCommented: reviewData.userId === currentUser,
+          });
+        });
+        setReviews(reviewsArray);
+        const hasUserCommented = reviewsArray.some(
+          review => review.hasCommented,
+        );
+        setHasCommented(hasUserCommented);
+      });
+    return () => subscriber();
+  }, []);
+
   return (
-    <ScrollView>
+    <ScrollView style={styles.container}>
       <FabComponent
         iconName="chevron-back"
         iconSize={30}
@@ -47,7 +78,6 @@ const EventDetailsScreen = ({navigation, route}: PropsNavigator) => {
         styles={{top: 10, left: 16}}
       />
       <View style={styles.container}>
-        <View style={styles.container}>
           <Image
             source={{uri: data.image}}
             style={styles.image}
@@ -57,36 +87,25 @@ const EventDetailsScreen = ({navigation, route}: PropsNavigator) => {
             <LikeButtonComponent eventName={!data.nameEvent ? data.name : data.nameEvent} />
           </View>
         </View>
-        <View style={styles.detailsContainer}>
-          <TextComponent
-            text={!data.nameEvent ? data.name : data.nameEvent}
-            font="bold"
-            size={28}
-          />
-          <InfoItem icon="location" eventData={direccion} />
-          {data.date && <InfoItem icon="calendar" eventData={data.date} />}
-          {data.time && <InfoItem icon="time" eventData={data.time} />}
-          {data.time && <InfoItem icon="cash" eventData={data.price} />}
-          <TextComponent
-            text={
-              !data.descriptionEvent ? data.description : data.descriptionEvent
-            }
-          />
-        </View>
+      <View style={styles.detailsContainer}>
+        <TextComponent text={data.name} font="bold" size={28} />
+        <InfoItem icon="location" eventData="Ver dirección en el mapa" />
+        {data.date && <InfoItem icon="calendar" eventData={data.date} />}
+        {data.time && <InfoItem icon="time" eventData={data.time} />}
+        {data.price && <InfoItem icon="cash" eventData={data.price} />}
+        <TextComponent text={data.description} />
       </View>
-      <View style={styles.mapContainer} >
-        {/* <GoogleMapComponent /> */}
-        <MapsEventDetailsComponent 
+      <View style={styles.mapContainer}>
+        <MapsEventDetailsComponent
           latitude={data.map.latitude}
           longitude={data.map.longitude}
-          title={!data.nameEvent ? data.name : data.nameEvent}/>
-      </View>
-      <View style={styles.review}>
-        <ReviewComponent
-          image={require('../assets/user.jpg')}
-          userName="Nombre del usuario"
-          userReview="Reseña del usuario"
+          title={data.name}
         />
+      </View>
+      <View style={styles.detailsContainer}>
+        <TextComponent text="Reseñas" font="bold" size={26} />
+        <CommentComponent data={reviews} />
+        {!hasCommented && <ReviewComponent locationId={id} />}
       </View>
     </ScrollView>
   );
@@ -99,13 +118,6 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: 200,
-  },
-  iconGray: {
-    color: '#949494',
-    marginRight: 10,
-  },
-  icon: {
-    color: '#FFD43B',
   },
   detailsContainer: {
     padding: 20,

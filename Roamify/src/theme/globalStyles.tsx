@@ -12,7 +12,7 @@ export const globalStyles = StyleSheet.create({
     alignItems: 'center',
   },
   inputPrimary: {
-    backgroundColor: '#CCCCCC',
+    backgroundColor: '#F2F3F5',
     borderRadius: 10,
     paddingLeft: 15,
     minWidth: 280,
@@ -23,7 +23,6 @@ export const globalStyles = StyleSheet.create({
     borderRadius: 10,
     paddingLeft: 15,
     minWidth: 280,
-    color: '#040415',
   },
   inputSecondary: {
     display: 'flex',
@@ -33,6 +32,14 @@ export const globalStyles = StyleSheet.create({
     width: '90%',
     paddingLeft: 55,
     borderColor: '#B7B7B7',
+    color: '#040415',
+  },
+  inputDescription: {
+    backgroundColor: '#CCCCCC',
+    borderRadius: 10,
+    width: '100%',
+    marginBottom: 10,
+    paddingVertical: 20,
     color: '#040415',
   },
   buttonPrimary: {
@@ -71,6 +78,6 @@ export const globalStyles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
-    justifyContent: 'space-evenly'
+    justifyContent: 'space-evenly',
   },
 });

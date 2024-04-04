@@ -1,53 +1,56 @@
-import {FlatList} from 'react-native';
+import {FlatList, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {getData} from '../hooks/getData';
 import CardComponent from './CardComponent';
 import {useNavigation} from '@react-navigation/native';
+import firestore from '@react-native-firebase/firestore';
 
 interface Props {
   category: string;
-  isPlace?: boolean;
 }
 
 const DataComponent = (props: Props) => {
-  const {category, isPlace} = props;
+  const {category} = props;
 
   const navigation = useNavigation();
-  const [events, setEvents] = useState<Array<any>>();
-  const [places, setPlaces] = useState<Array<any>>();
+  const [locations, setLocations] = useState<Array<any>>();
 
   useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const data = await getData();
-        setEvents(data?.eventsData);
-        setPlaces(data?.placesData);
-      } catch (error) {
-        console.error('Error fetching events:', error);
-      }
-    };
-
-    fetchEvents();
+    const subscriber = firestore()
+      .collection('locations')
+      .onSnapshot(querySnapshot => {
+        const locationsArray = [];
+        querySnapshot.forEach(documentSnapshot => {
+          locationsArray.push({
+            ...documentSnapshot.data(),
+            id: documentSnapshot.id,
+          });
+        });
+        setLocations(locationsArray);
+      });
+    return () => subscriber();
   }, []);
+
   return (
     <FlatList
       style={{paddingHorizontal: 25}}
-      data={isPlace ? places : events}
+      data={locations}
       renderItem={({item}) =>
-        category === item.category && (
+        category === item.category ? (
           <CardComponent
+            id={item.id}
             onPress={() =>
               /* @ts-ignore */
               navigation.navigate('EventDetailsScreen', {
                 data: item,
               })
             }
-            key={isPlace ? item.name : item.nameEvent}
-            name={isPlace ? item.name : item.nameEvent}
-            description={isPlace ? item.description : item.descriptionEvent}
+            key={item.id}
+            name={item.name}
+            description={item.description}
             image={item.image}
           />
-        )
+        ) : null
       }
     />
   );
