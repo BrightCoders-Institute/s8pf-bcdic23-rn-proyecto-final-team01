@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Image, StyleSheet, ScrollView} from 'react-native';
 import TextComponent from '../components/TextComponent';
 import FabComponent from '../components/FabComponent';
@@ -36,7 +36,6 @@ const EventDetailsScreen = ({navigation, route}) => {
     }
   }, [data.map]);
 
-
   const currentUser = useAuth().userId;
 
   const [reviews, setReviews] = useState<Array<any>>();
@@ -70,13 +69,6 @@ const EventDetailsScreen = ({navigation, route}) => {
 
   return (
     <ScrollView style={styles.container}>
-      <FabComponent
-        iconName="chevron-back"
-        iconSize={30}
-        iconColor="#606eee"
-        onPress={() => navigation.navigate('HomeScreen')}
-        styles={{top: 10, left: 16}}
-      />
       <View style={styles.container}>
           <Image
             source={{uri: data.image}}
@@ -86,7 +78,13 @@ const EventDetailsScreen = ({navigation, route}) => {
           <View style={styles.containerHeart}>
             <LikeButtonComponent eventName={!data.nameEvent ? data.name : data.nameEvent} />
           </View>
-        </View>
+      </View>
+      <FabComponent styles={{top: 10, left: 16}} />
+      <Image
+        source={{uri: data.image}}
+        style={styles.image}
+        resizeMode="cover"
+      />
       <View style={styles.detailsContainer}>
         <TextComponent text={data.name} font="bold" size={28} />
         <InfoItem icon="location" eventData="Ver dirección en el mapa" />
@@ -125,9 +123,9 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   mapContainer: {
-    padding: 80, 
-    borderRadius: 15, 
-    overflow: 'hidden', 
+    padding: 80,
+    borderRadius: 15,
+    overflow: 'hidden',
     margin: 20,
     shadowColor: '#000',
     shadowOffset: {

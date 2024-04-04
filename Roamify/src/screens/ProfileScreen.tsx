@@ -1,6 +1,6 @@
-import { StyleSheet, View } from 'react-native';
-import React, { useState } from 'react';
-import { globalStyles } from '../theme/globalStyles';
+import {StyleSheet, View} from 'react-native';
+import React, {useState} from 'react';
+import {globalStyles} from '../theme/globalStyles';
 import TextComponent from '../components/TextComponent';
 import LoadingComponent from '../components/LoadingComponent';
 import ImageWithButton from '../components/profile/ImageWithButton';
@@ -14,9 +14,9 @@ const ProfileScreen = () => {
       {isLoading && <LoadingComponent />}
       <View style={globalStyles.screen}>
         <View style={styles.headerContainer}>
-          <FabComponent onPress={() => { console.log('fab') }} iconName='' />
+          <FabComponent />
         </View>
-        <View style={{ paddingHorizontal: 25 }}>
+        <View style={{paddingHorizontal: 25}}>
           <View>
             <TextComponent text="Mi cuenta" font="bold" size={26} />
             <View>
@@ -38,6 +38,6 @@ const styles = StyleSheet.create({
   headerContainer: {
     height: '7%',
     marginTop: 8,
-    marginLeft: 8
+    marginLeft: 8,
   },
 });
