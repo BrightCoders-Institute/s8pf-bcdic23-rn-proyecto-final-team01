@@ -3,12 +3,12 @@ import { View } from 'react-native';
 import { globalStyles } from '../../theme/globalStyles';
 import ModalComponent from '../common/ModalComponent';
 import InputLabelComponent from '../common/InputLabelComponent';
-import { ModalForgetPassProps } from './types';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import auth from '@react-native-firebase/auth';
 import LoadingComponent from '../LoadingComponent';
+import { ModalForgetPassProps } from '../types';
 
 const ModalForgetPass = ({ visible, onClose, setModalForgetPassVisible }: ModalForgetPassProps) => {
     const [loading, setLoading] = useState(false);

@@ -1,6 +1,6 @@
 import storage from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore';
-import { ImageStorageProp, ResquestUpdateUser } from './types';
+import { ImageStorageProp, ResquestUpdateUser, userDataProp, } from './types';
 import auth, { firebase } from '@react-native-firebase/auth';
 
 export const uploadImageStorange = async (
@@ -63,7 +63,21 @@ export const fetchImageUrl = async (
     }
 }
 
-export const getUserData = () => {
+export const fetchUserData = async (
+    userId?: string
+): Promise<userDataProp> => {
+    try {
+        const userDoc = await firestore().collection('users').doc(userId).get();
+        const userData = userDoc.data();
+        if (userData) {
+            return userData
+        }
+    } catch (error) {
+        console.error('Error fetching image URL:', error);
+    }
+}
+
+export const getUserDataAuten = () => {
     const user = auth().currentUser;
     if (user) {
         return user;
@@ -97,7 +111,7 @@ export const reauthenticateAndChangePassword = async (
     currentPassword: string, newPassword: string
 ) => {
     try {
-        const user = getUserData();
+        const user = getUserDataAuten();
         // Crear un credential con la contraseña actual del usuario
         const credential = firebase.auth.EmailAuthProvider.credential(user.email, currentPassword);
         // Reautenticar al usuario con la credencial

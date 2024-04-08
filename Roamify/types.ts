@@ -14,6 +14,7 @@ export type FormFieldProps = {
   errors?: any;
   setValue?: any;
   disabled?: boolean;
+  defaultValue?: string;
 };
 
 export type InputFileProps = {

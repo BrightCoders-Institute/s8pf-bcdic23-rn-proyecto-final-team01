@@ -6,12 +6,12 @@ import {useNavigation} from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
 import { fetchImageUrl } from '.';
 
-
 const Header = () => {
   const navigation = useNavigation();
   const [menuVisible, setMenuVisible] = useState(false);
   const [userId, setUserId] = useState<null | string>(null);
   const [userImageUrl, setUserImageUrl] = useState('https://firebasestorage.googleapis.com/v0/b/roamify-bb95e.appspot.com/o/profileImage%2Fdef-user.png?alt=media&token=81013ded-4e5d-4b0b-8c6b-1d349fa42ee9');
+  
   useEffect(() => {
     const unsubscribe = auth().onAuthStateChanged(user => {
       if (user) {
@@ -23,7 +23,6 @@ const Header = () => {
         setUserId(null);
       }
     });
-
     return () => unsubscribe();
   }, []);
 
