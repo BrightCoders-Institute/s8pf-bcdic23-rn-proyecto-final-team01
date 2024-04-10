@@ -6,13 +6,14 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import {globalStyles} from '../../theme/globalStyles';
 import ButtonComponent from '../ButtonComponent';
 import InputWithIconComponent from '../common/InputIconComponent';
-// import auth from '@react-native-firebase/auth';
-// import { useAuth } from '../../contexts/AuthContext';
+import {useAuth} from '../../contexts/AuthContext';
+import {FormProfileProps} from '../types';
+import auth from '@react-native-firebase/auth';
 
-const FormProfile = () => {
+const FormProfile = ({setIsLoading}: FormProfileProps) => {
   const [showName, setShowName] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  // const { userId } = useAuth()
+  const {userData, getDataUser} = useAuth();
 
   const schemaFormProfile = useMemo(
     () =>
@@ -37,16 +38,57 @@ const FormProfile = () => {
     [showName, showPassword],
   );
 
-  const {handleSubmit, control, getValues} = useForm({
+  const {handleSubmit, control, getValues, setValue} = useForm({
     resolver: yupResolver(schemaFormProfile),
   });
 
-  const onSubmit = () => {
+  const closeInputName= () => {
+    setShowName(false);
+  };
+
+  const updateUserName = async () => {
+    const values = getValues();
+    if (values.name) {
+      const {name} = values;
+      const user = auth().currentUser;
+      if (user === null) return;
+      user
+        .updateProfile({
+          displayName: name,
+        })
+        .then(async () => {
+          console.log('Nombre de usuario actualizado exitosamente');
+          const updatedUserData = await getDataUser();
+          console.log('updatedUserData', updatedUserData);
+          setValue('name', updatedUserData?.displayName || '');
+          closeInputName();
+        })
+        .catch((error: any) => {
+          console.error('Error al actualizar el nombre de usuario:', error);
+        });
+    }
+  };
+
+  const onSubmit = async () => {
+    setIsLoading(true);
     const values = getValues();
     console.log(values);
-    // const user = auth().currentUser;
-    // console.log(user);
-    return;
+    try {
+      if (values.name && !values.password) {
+        await updateUserName();
+      } else if (!values.name && values.password) {
+        const {password} = values;
+        console.log('pass', values);
+      } else if (values.name && values.password) {
+        await updateUserName();
+        const {password} = values;
+        console.log('pass', values);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -60,7 +102,9 @@ const FormProfile = () => {
         rules={{required: 'El nombre es requerido'}}
         styles={{marginRight: 35}}
         textLabel="Nombre"
-        texInputDisabled="Tu nombre"
+        texInputDisabled={
+          userData === null ? 'No se encontró tu nombre' : userData.displayName
+        }
       />
       <InputWithIconComponent
         control={control}

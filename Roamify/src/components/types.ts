@@ -37,6 +37,10 @@ export type ImageInputProps = {
     setIsLoading: Dispatch<SetStateAction<boolean>>;
 }
 
+export type FormProfileProps = {
+    setIsLoading: Dispatch<SetStateAction<boolean>>;
+}
+
 export type ModalForgetPassProps = {
     visible: boolean;
     onClose: () => void;

@@ -23,7 +23,7 @@ const ProfileScreen = () => {
               <ImageWithButton setIsLoading={setIsLoading} />
             </View>
             <View>
-              <FormProfile />
+              <FormProfile setIsLoading={setIsLoading} />
             </View>
           </View>
         </View>

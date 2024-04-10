@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text, Image } from 'react-native';
 import * as ImagePicker from 'react-native-image-picker';
-import { fetchImageUrl, updateDataUser, uploadImageStorange } from '..';
+import { fetchImageUrl, updateImageUrlProfile, uploadImageStorange } from '..';
 import { ActionImagePicker, ImageInputProps } from '../types';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -33,7 +33,7 @@ const ImageWithButton = ({ setIsLoading }: ImageInputProps) => {
                 route: "profileImage"
             });
             const data = { profileImgURL: uploadedImageData }
-            await updateDataUser({ userId, data });
+            await updateImageUrlProfile({ userId, data });
             console.log('Image uploaded successfully');
             loadImage()
         } catch (error) {
