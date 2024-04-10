@@ -3,6 +3,7 @@ import {View, Image, StyleSheet, ScrollView} from 'react-native';
 import TextComponent from '../components/TextComponent';
 import FabComponent from '../components/FabComponent';
 import InfoItem from '../components/InfoItem';
+import LikeButtonComponent from '../components/LikeButtonComponent';
 import CommentComponent from '../components/CommentComponent';
 import firestore from '@react-native-firebase/firestore';
 import ReviewComponent from '../components/ReviewComponent';
@@ -68,6 +69,16 @@ const EventDetailsScreen = ({navigation, route}) => {
 
   return (
     <ScrollView style={styles.container}>
+      <View style={styles.container}>
+          <Image
+            source={{uri: data.image}}
+            style={styles.image}
+            resizeMode="cover"
+          />
+          <View style={styles.containerHeart}>
+            <LikeButtonComponent eventName={!data.nameEvent ? data.name : data.nameEvent} />
+          </View>
+      </View>
       <FabComponent styles={{top: 10, left: 16}} />
       <Image
         source={{uri: data.image}}
@@ -132,6 +143,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 15,
+  },
+  styleGoogle: {
+    display: 'flex',
+    width: '100%',
+    height: '40%',
+  },
+  containerHeart: {
+    position: 'absolute',
+    bottom: 15,
+    left: '81%',
   },
 });
 
