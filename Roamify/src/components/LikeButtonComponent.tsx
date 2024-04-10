@@ -6,7 +6,7 @@ import { useAuth } from '../contexts/AuthContext';
 
 const LikeButtonComponent = ({eventName}) => {
     const { userId } = useAuth();
-    const [liked, setLiked] = useState<boolean>(false);
+    const [liked, setLiked] = useState(false);
 
     useEffect(() => {
         const checkInitialLikeState = async () => {
