@@ -14,6 +14,9 @@ import ImagePickerComponent from './ImagePickerComponent';
 import {getDate} from '../hooks/getDate';
 import {useNavigation} from '@react-navigation/native';
 import InputCategory from './InputCategory';
+import DatePicker from 'react-native-date-picker';
+import ButtonComponent from './ButtonComponent';
+import {useAuth} from '../contexts/AuthContext';
 
 const schemaAddEvent = yup.object().shape({
   name: yup.string().required('Nombre del evento es requerido'),
@@ -23,14 +26,23 @@ const schemaAddEvent = yup.object().shape({
   category: yup.string(),
   map: yup.object().required('Selecciona una ubicación válida'),
   limitedCapacity: yup.boolean(),
+  price: yup.string(),
 });
 
 /* @ts-ignore */
 const FormAddEvent = ({location, setLocation, setIsLoading}) => {
   const navigation = useNavigation();
+  const currentUser = useAuth().userId;
 
   /* Category set */
   const [selectedCategory, setSelectedCategory] = useState<string>('');
+
+  const [time, setTime] = useState(new Date());
+  const [isOpen, setIsOpen] = useState(false);
+
+  const formattedTime = time.toString().substring(16, 21);
+
+  console.log(formattedTime);
 
   const handleCategorySelect = (category: string) => {
     setSelectedCategory(category);
@@ -74,7 +86,8 @@ const FormAddEvent = ({location, setLocation, setIsLoading}) => {
   const onSubmit = () => {
     setIsLoading(true);
     const values = getValues();
-    const {name, description, image, date, map, limitedCapacity} = values;
+    const {name, description, image, date, map, limitedCapacity, price} =
+      values;
     const category = selectedCategory;
     const type = 'event';
     try {
@@ -89,6 +102,9 @@ const FormAddEvent = ({location, setLocation, setIsLoading}) => {
           map,
           limitedCapacity: isChecked,
           type,
+          price,
+          time: formattedTime,
+          userId: currentUser,
         })
         .then(() => {
           console.log('Event added!');
@@ -104,55 +120,82 @@ const FormAddEvent = ({location, setLocation, setIsLoading}) => {
   };
 
   return (
-    <View style={styles.container}>
-      <TextComponent text="Nombre del evento" />
-      <InputComponent
-        placeholder="Nombra tu evento"
-        style={globalStyles.inputPrimary}
-        control={control}
-        setValue={setValue}
-        errors={errors}
-        name="name"
+    <>
+      <DatePicker
+        modal
+        mode="time"
+        open={isOpen}
+        date={time}
+        onConfirm={time => {
+          setIsOpen(false);
+          setTime(time);
+        }}
+        onCancel={() => {
+          setIsOpen(false);
+        }}
       />
-      <TextComponent text="Selecciona una foto de portada" />
-      <ImagePickerComponent setDownloadLink={handleSetLink} />
-      <TextComponent text="Selecciona una fecha" />
-      <CalendarComponent onDateSelect={handleDateSelect} />
-      <TextComponent text="Selecciona una categoría" />
-      <InputCategory errors={errors} setCategory={handleCategorySelect} />
-      <TextComponent text="Hora" />
-      <TextComponent text="Dirección del evento" />
-      <InputMapComponent
-        placeholder="Seleccionar en el mapa"
-        style={globalStyles.inputPrimary}
-        control={control}
-        setValue={setValue}
-        errors={errors}
-        name="map"
-        icon="location"
-        location={location}
-        setLocation={setLocation}
-      />
-      <TextComponent text="Descripción del evento" />
-      <InputComponent
-        placeholder="Agrega una descripción"
-        style={globalStyles.inputPrimary}
-        control={control}
-        setValue={setValue}
-        errors={errors}
-        name="description"
-      />
-      <TextComponent text="Costo del evento (Opcional)" />
-      <TextComponent text="Capacidad limitada" />
-      <CheckBoxComponent onPress={() => setIsChecked(!isChecked)} />
-      <TouchableOpacity
-        style={globalStyles.buttonPrimary}
-        onPress={handleSubmit(onSubmit)}>
-        <Text style={{color: 'white', fontWeight: 'bold', fontSize: 18}}>
-          Crear evento
-        </Text>
-      </TouchableOpacity>
-    </View>
+      <View style={styles.container}>
+        <TextComponent text="Nombre del evento" />
+        <InputComponent
+          placeholder="Nombra tu evento"
+          style={globalStyles.inputPrimary}
+          control={control}
+          setValue={setValue}
+          errors={errors}
+          name="name"
+        />
+        <TextComponent text="Selecciona una foto de portada" />
+        <ImagePickerComponent setDownloadLink={handleSetLink} />
+        <TextComponent text="Selecciona una fecha" />
+        <CalendarComponent onDateSelect={handleDateSelect} />
+        <TextComponent text="Selecciona una categoría" />
+        <InputCategory errors={errors} setCategory={handleCategorySelect} />
+        <TextComponent text="Dirección del evento" />
+        <InputMapComponent
+          placeholder="Seleccionar en el mapa"
+          style={globalStyles.inputPrimary}
+          control={control}
+          setValue={setValue}
+          errors={errors}
+          name="map"
+          icon="location"
+          location={location}
+          setLocation={setLocation}
+        />
+        <TextComponent text="Descripción del evento" />
+        <InputComponent
+          placeholder="Agrega una descripción"
+          style={globalStyles.inputPrimary}
+          control={control}
+          setValue={setValue}
+          errors={errors}
+          name="description"
+        />
+        <TextComponent text="Hora (Opcional)" />
+        <ButtonComponent
+          text="Selecciona la hora del evento"
+          onPress={() => setIsOpen(true)}
+        />
+        <TextComponent text="Costo del evento (Opcional)" />
+        <InputComponent
+          placeholder="Escribe el costo"
+          style={globalStyles.inputPrimary}
+          control={control}
+          setValue={setValue}
+          errors={errors}
+          name="price"
+        />
+        <TextComponent text="Capacidad limitada" />
+        <CheckBoxComponent onPress={() => setIsChecked(!isChecked)} />
+        <TouchableOpacity
+          style={globalStyles.buttonPrimary}
+          onPress={handleSubmit(onSubmit)}>
+          <Text style={{color: 'white', fontWeight: 'bold', fontSize: 18}}>
+            Crear evento
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </>
   );
 };
 
