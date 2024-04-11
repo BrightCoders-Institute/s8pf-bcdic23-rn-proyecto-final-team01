@@ -1,7 +1,7 @@
 import storage from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore';
-import {ImageStorageProp, ResquestUpdateUser, userDataProp} from './types';
-import auth, {FirebaseAuthTypes, firebase} from '@react-native-firebase/auth';
+import {ImageStorageProp, ResquestUpdateUser} from './types';
+import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 
 export const uploadImageStorange = async ({
   uri,
@@ -19,7 +19,6 @@ export const uploadImageStorange = async ({
     const reference = storage().ref(`${route}/${newName}`);
     await reference.putFile(uri);
     const url = await reference.getDownloadURL();
-    console.log(url);
     console.log('Image uploaded successfully');
     return url;
   } catch (error) {
@@ -74,51 +73,18 @@ export const getUserDataAuten = (): FirebaseAuthTypes.User => {
   }
 };
 
-export const updatePassword = async (newPassword: string) => {
-  try {
-    const user = firebase.auth().currentUser;
-    // Verifica si el usuario está autenticado
-    if (!user) {
-      throw new Error('No hay usuario autenticado.');
+export const changePassword = async (password: string, newPassword: string) => {
+  const user = auth().currentUser;
+  if (user) {
+    const credential = auth.EmailAuthProvider.credential(user.email, password);
+    try {
+      await user.reauthenticateWithCredential(credential);
+      await user.updatePassword(newPassword);
+      console.log('Contraseña actualizada con éxito');
+    } catch (error) {
+      console.error('Error al reautenticar o actualizar la contraseña:', error);
     }
-    console.log(user);
-    console.log(newPassword);
-    // Actualiza la contraseña del usuario
-    await user.updatePassword(newPassword);
-
-    console.log('Contraseña actualizada correctamente.');
-  } catch (error) {
-    console.error('Error al actualizar la contraseña:', error.message);
-    throw error;
-  }
-};
-
-export const reauthenticateAndChangePassword = async (
-  currentPassword: string,
-  newPassword: string,
-) => {
-  try {
-    const user = getUserDataAuten();
-    // Crear un credential con la contraseña actual del usuario
-    const credential = firebase.auth.EmailAuthProvider.credential(
-      user.email,
-      currentPassword,
-    );
-    // Reautenticar al usuario con la credencial
-    await user.reauthenticateWithCredential(credential);
-    // Cambiar la contraseña del usuario
-    await user.updatePassword(newPassword);
-    console.log('Contraseña actualizada exitosamente.');
-  } catch (error) {
-    if (error.code === 'auth/requires-recent-login') {
-      // Si se requiere una autenticación reciente, solicitar al usuario que vuelva a autenticarse
-      console.log(
-        'Se requiere una autenticación reciente. Solicitando al usuario que vuelva a autenticarse.',
-      );
-      // Aquí se puede redirigir al usuario a una pantalla de inicio de sesión o mostrar un modal de autenticación.
-    } else {
-      // Manejar otros errores
-      console.error('Error al cambiar la contraseña:', error.message);
-    }
+  } else {
+    console.error('No hay un usuario autenticado');
   }
 };

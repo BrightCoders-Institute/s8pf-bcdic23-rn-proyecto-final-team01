@@ -9,11 +9,14 @@ import InputWithIconComponent from '../common/InputIconComponent';
 import {useAuth} from '../../contexts/AuthContext';
 import {FormProfileProps} from '../types';
 import auth from '@react-native-firebase/auth';
+import ModalChangePassword from './ModalChangePassword';
 
 const FormProfile = ({setIsLoading}: FormProfileProps) => {
   const [showName, setShowName] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [newPassword, setNewPassword] = useState<string>('');
   const {userData, getDataUser} = useAuth();
+  const [modalChangePassVisible, setModalChangePassVisible] = useState(false);
 
   const schemaFormProfile = useMemo(
     () =>
@@ -42,24 +45,34 @@ const FormProfile = ({setIsLoading}: FormProfileProps) => {
     resolver: yupResolver(schemaFormProfile),
   });
 
-  const closeInputName= () => {
+  const closeInputName = () => {
     setShowName(false);
+  };
+
+  const closeInputPassword = () => {
+    setShowPassword(false);
+    setValue('password', '');
+  };
+
+  const handleCloseModalChangePass = () => {
+    setModalChangePassVisible(false);
+  };
+
+  const handlerModalChangePassword = () => {
+    setModalChangePassVisible(true);
   };
 
   const updateUserName = async () => {
     const values = getValues();
     if (values.name) {
-      const {name} = values;
       const user = auth().currentUser;
       if (user === null) return;
       user
         .updateProfile({
-          displayName: name,
+          displayName: values.name,
         })
         .then(async () => {
-          console.log('Nombre de usuario actualizado exitosamente');
           const updatedUserData = await getDataUser();
-          console.log('updatedUserData', updatedUserData);
           setValue('name', updatedUserData?.displayName || '');
           closeInputName();
         })
@@ -78,11 +91,13 @@ const FormProfile = ({setIsLoading}: FormProfileProps) => {
         await updateUserName();
       } else if (!values.name && values.password) {
         const {password} = values;
-        console.log('pass', values);
+        setNewPassword(password);
+        handlerModalChangePassword();
       } else if (values.name && values.password) {
         await updateUserName();
         const {password} = values;
-        console.log('pass', values);
+        setNewPassword(password);
+        handlerModalChangePassword();
       }
     } catch (error) {
       console.log(error);
@@ -92,37 +107,49 @@ const FormProfile = ({setIsLoading}: FormProfileProps) => {
   };
 
   return (
-    <View style={{marginTop: 30}}>
-      <InputWithIconComponent
-        control={control}
-        disabled={showName}
-        setDisabled={setShowName}
-        name="name"
-        placeholder="Ingresa tu nombre"
-        rules={{required: 'El nombre es requerido'}}
-        styles={{marginRight: 35}}
-        textLabel="Nombre"
-        texInputDisabled={
-          userData === null ? 'No se encontró tu nombre' : userData.displayName
-        }
+    <>
+      <View style={{marginTop: 30}}>
+        <InputWithIconComponent
+          control={control}
+          disabled={showName}
+          setDisabled={setShowName}
+          name="name"
+          placeholder="Ingresa tu nombre"
+          rules={{required: 'El nombre es requerido'}}
+          styles={{marginRight: 35}}
+          textLabel="Nombre"
+          texInputDisabled={
+            userData === null
+              ? 'No se encontró tu nombre'
+              : userData.displayName
+          }
+        />
+        <InputWithIconComponent
+          control={control}
+          disabled={showPassword}
+          setDisabled={setShowPassword}
+          name="password"
+          placeholder="Ingresa una nueva contraseña"
+          rules={{required: 'La constraseña es requerida'}}
+          styles={{marginRight: 35}}
+          textLabel="Contraseña"
+          texInputDisabled="********"
+        />
+        <ButtonComponent
+          text="Submit"
+          styles={[globalStyles.buttonPrimary, {marginVertical: 10}]}
+          onPress={handleSubmit(onSubmit)}
+        />
+      </View>
+      <ModalChangePassword
+        visible={modalChangePassVisible}
+        onClose={handleCloseModalChangePass}
+        setModalChangePassVisible={setModalChangePassVisible}
+        newPassword={newPassword}
+        setIsLoading={setIsLoading}
+        closeInputPassword={closeInputPassword}
       />
-      <InputWithIconComponent
-        control={control}
-        disabled={showPassword}
-        setDisabled={setShowPassword}
-        name="password"
-        placeholder="Ingresa una contraseña"
-        rules={{required: 'La constraseña es requerida'}}
-        styles={{marginRight: 35}}
-        textLabel="Contraseña"
-        texInputDisabled="********"
-      />
-      <ButtonComponent
-        text="Submit"
-        styles={[globalStyles.buttonPrimary, {marginVertical: 10}]}
-        onPress={handleSubmit(onSubmit)}
-      />
-    </View>
+    </>
   );
 };
 
