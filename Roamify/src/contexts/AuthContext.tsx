@@ -3,34 +3,38 @@ import React, {
   createContext,
   useContext,
   useEffect,
-  useState
+  useState,
 } from 'react';
-import auth from '@react-native-firebase/auth';
+import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
+import { getUserDataAuten} from '../components';
 interface AuthProviderProps {
   children: ReactElement;
 }
 
 interface AuthContextType {
   userId: string | null;
-  password: string | null;
-  setPasswordOnLogin: (newPassword: string) => void;
+  userData: FirebaseAuthTypes.User | null;
+  getDataUser: () => Promise<FirebaseAuthTypes.User | undefined>
 }
 
 const defaultAuthContext: AuthContextType = {
   userId: null,
-  password: null,
-  setPasswordOnLogin: () => {},
+  userData: null,
+  getDataUser: async () => undefined, 
 };
 
 const AuthContext = createContext(defaultAuthContext);
 
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
   const [userId, setUserId] = useState<null | string>(null);
-  const [password, setPassword] = useState<null | string>(null);
-
-  const setPasswordOnLogin = (newPassword: string) => {
-    console.log('password', newPassword);
-    setPassword(newPassword);
+  const [userData, setUserData] = useState<null | FirebaseAuthTypes.User>(null);
+  
+  const getDataUser = async () => {
+    if (userId) {
+      const _userData = getUserDataAuten();
+      setUserData(_userData);
+      return _userData
+    }
   };
 
   useEffect(() => {
@@ -41,12 +45,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setUserId(null);
       }
     });
-
     return () => unsubscribe();
   }, []);
 
+  useEffect(() => {
+    getDataUser();
+  }, [userId]);
+
   return (
-    <AuthContext.Provider value={{ userId, password, setPasswordOnLogin }}>
+    <AuthContext.Provider value={{userId, userData, getDataUser}}>
       {children}
     </AuthContext.Provider>
   );

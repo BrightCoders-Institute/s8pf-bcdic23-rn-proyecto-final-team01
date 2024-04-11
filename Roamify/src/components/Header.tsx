@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Modal,
   View,
@@ -36,7 +36,6 @@ const Header = () => {
         setUserId(null);
       }
     });
-
     return () => unsubscribe();
   }, []);
 

@@ -18,7 +18,6 @@ import auth from '@react-native-firebase/auth';
 import firebase from '@react-native-firebase/firestore';
 import * as yup from 'yup';
 import LoadingComponent from '../components/LoadingComponent';
-import { useAuth } from '../contexts/AuthContext';
 import InputLabelComponent from '../components/common/InputLabelComponent';
 import { userAuthProp } from '../components/types';
 import ModalForgetPass from '../components/authentication/ModalForgetPass';
@@ -31,7 +30,6 @@ const AuthScreen = () => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
   const [modalForgetPassVisible, setModalForgetPassVisible] = useState(false);
-  const { setPasswordOnLogin } = useAuth();
 
   const schema = useMemo(() => yup.object().shape({
     email: yup.string().email().required('El email es requerido'),
@@ -46,7 +44,6 @@ const AuthScreen = () => {
       .max(12, 'La contraseña debe tener máximo 12 caracteres')
       .required('La contraseña es requerida'),
   }), [variant]);
-
 
   const {handleSubmit, setError, control, getValues} = useForm<FormData>({
     resolver: async data => {
@@ -81,7 +78,6 @@ const AuthScreen = () => {
         const user = userCredential.user;
       })
       .then(userCredential => {
-        setPasswordOnLogin(password);
         navigation.navigate('HomeScreen');
       })
       .catch(error => {

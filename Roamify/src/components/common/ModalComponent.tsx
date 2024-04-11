@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal, View, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import { globalStyles } from '../../theme/globalStyles';
 import ButtonComponent from '../ButtonComponent';
-import { ModalComponentProps } from './types';
+import { ModalComponentProps } from '../types';
 
 const ModalComponent = ({ visible, onClose, children, aceptar }: ModalComponentProps) => {
   return (
@@ -65,8 +65,6 @@ const styles = StyleSheet.create({
     padding: 5,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    // borderTopWidth: 1,
-    // borderTopColor: '#CCCCCC',
     paddingVertical: 10,
   },
 });

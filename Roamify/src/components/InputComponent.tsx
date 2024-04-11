@@ -12,7 +12,8 @@ const InputComponent: React.FC<FormFieldProps> = ({
   control,
   rules,
   disabled,
-  style
+  style,
+  defaultValue
 }) => {
   const [secureTextEntryState, setSecureTextEntryState] =
     useState(secureTextEntry);
@@ -69,7 +70,7 @@ const InputComponent: React.FC<FormFieldProps> = ({
         )}
         name={name}
         rules={rules}
-        defaultValue=""
+        defaultValue={defaultValue ? defaultValue : ''}
       />
     </View>
   );

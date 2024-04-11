@@ -26,8 +26,8 @@ const StackNavigation = ({initialRoute}: {initialRoute: string}) => {
           }}>
           <Stack.Screen name="AuthScreen" component={AuthScreen} />
           <Stack.Screen name="HomeScreen" component={HomeScreen} />
-          <Stack.Screen name="MapScreen" component={MapScreen} />
           <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+          <Stack.Screen name="MapScreen" component={MapScreen} />
           <Stack.Screen name="AddEventScreen" component={AddEventScreen} />
           <Stack.Screen name="MyEventsScreen" component={MyEventsScreen} />
           <Stack.Screen name="FavoritesScreen" component={FavoritesScreen} />
