@@ -47,6 +47,15 @@ export type ModalForgetPassProps = {
     setModalForgetPassVisible: Dispatch<SetStateAction<boolean>>
 }
 
+export type ModalChangePasswordProps = {
+    visible: boolean;
+    onClose: () => void;
+    setModalChangePassVisible: Dispatch<SetStateAction<boolean>>;
+    newPassword: string;
+    setIsLoading: Dispatch<SetStateAction<boolean>>;
+    closeInputPassword: () => void
+}
+
 export type InputLabelComponentProps = {
     control: any;
     name: string;
