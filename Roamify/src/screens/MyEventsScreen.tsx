@@ -1,4 +1,4 @@
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, Alert} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Header from '../components/Header';
 import NavBar from '../components/NavBar';
@@ -6,14 +6,53 @@ import {globalStyles} from '../theme/globalStyles';
 import TextComponent from '../components/TextComponent';
 import CardComponent from '../components/CardComponent';
 import {useNavigation} from '@react-navigation/native';
-import {FlatList, TouchableOpacity} from 'react-native-gesture-handler';
+import {
+  FlatList,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {getData} from '../hooks/getData';
-import DataComponent from '../components/DataComponent';
+import firestore from '@react-native-firebase/firestore';
+import {useAuth} from '../contexts/AuthContext';
+import {getDate} from '../hooks/getDate';
 
 const MyEventsScreen = () => {
   const navigation = useNavigation();
+  const [events, setEvents] = useState<Array<any>>();
+  const [activeEvent, setActiveEvent] = useState(false);
+
+  const currentUser = useAuth().userId;
+  const today = getDate();
+
+  const handleAlert = () => {
+    Alert.alert('Ya tienes un evento activo, no puedes crear más eventos');
+  };
+
+  useEffect(
+    () => {
+      const subscriber = firestore()
+        .collection('locations')
+        .where('userId', '==', currentUser)
+        .onSnapshot(querySnapshot => {
+          const eventsArray = [];
+          querySnapshot.forEach(documentSnapshot => {
+            eventsArray.push({
+              ...documentSnapshot.data(),
+              id: documentSnapshot.id,
+            });
+          });
+          setEvents(eventsArray);
+
+          const hasActiveEvent = eventsArray.some(item => item.date >= today);
+          setActiveEvent(hasActiveEvent);
+        });
+      return () => subscriber();
+    },
+    [
+      /* currentUser, today */
+    ],
+  );
 
   return (
     <View style={globalStyles.screen}>
@@ -22,21 +61,61 @@ const MyEventsScreen = () => {
         <TextComponent text="Crear un evento" font="bold" size={26} />
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('AddEventScreen')}>
+          onPress={
+            activeEvent
+              ? () => handleAlert()
+              : () => navigation.navigate('AddEventScreen')
+          }>
           <Icon name="add-outline" size={25} color={'white'} />
         </TouchableOpacity>
       </View>
       <SafeAreaView style={{flex: 1}}>
-        <View style={{paddingHorizontal: 25}}>
-          <TextComponent text="Evento activo" font="bold" size={22} />
-          <TextComponent
-            text="Historial de eventos"
-            font="bold"
-            size={22}
-            styles={{marginBottom: 10}}
-          />
-        </View>
-        <DataComponent />
+        <ScrollView>
+          <View style={{paddingHorizontal: 25}}>
+            <TextComponent text="Evento activo" font="bold" size={22} />
+            {events?.map(
+              item =>
+                item.userId === currentUser &&
+                item.date >= today && (
+                  <CardComponent
+                    id={item.id}
+                    onPress={() =>
+                      /* @ts-ignore */
+                      navigation.navigate('EventDetailsScreen', {data: item})
+                    }
+                    key={item.id}
+                    name={item.name}
+                    description={item.description}
+                    image={item.image}
+                  />
+                ),
+            )}
+            <TextComponent
+              text="Historial de eventos"
+              font="bold"
+              size={22}
+              styles={{marginBottom: 10}}
+            />
+
+            {events?.map(
+              item =>
+                item.userId === currentUser &&
+                item.date < today && (
+                  <CardComponent
+                    id={item.id}
+                    onPress={() =>
+                      /* @ts-ignore */
+                      navigation.navigate('EventDetailsScreen', {data: item})
+                    }
+                    key={item.id}
+                    name={item.name}
+                    description={item.description}
+                    image={item.image}
+                  />
+                ),
+            )}
+          </View>
+        </ScrollView>
       </SafeAreaView>
       <NavBar />
     </View>
