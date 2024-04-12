@@ -34,7 +34,6 @@ const ImageWithButton = ({ setIsLoading }: ImageInputProps) => {
             });
             const data = { profileImgURL: uploadedImageData }
             await updateImageUrlProfile({ userId, data });
-            console.log('Image uploaded successfully');
             loadImage()
         } catch (error) {
             console.error('Error handling image upload:', error);
