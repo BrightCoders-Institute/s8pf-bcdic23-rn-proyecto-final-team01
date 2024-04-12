@@ -17,6 +17,10 @@ const CardComponent = (props: Props) => {
   const {id, name, description, image, favorite, onPress} = props;
 
   const renderDescription = (text: string) => {
+    if (text === undefined || text === null) {
+      
+      return ''; 
+    }
     const words = text.split(' ');
     const limitedWords = words.slice(0, 25);
     return limitedWords.join(' ');
