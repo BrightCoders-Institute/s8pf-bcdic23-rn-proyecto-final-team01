@@ -1,12 +1,12 @@
 import {FlatList, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {getData} from '../hooks/getData';
 import CardComponent from './CardComponent';
 import {useNavigation} from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
+import {getDate} from '../hooks/getDate';
 
 interface Props {
-  category: string;
+  category?: string;
 }
 
 const DataComponent = (props: Props) => {
@@ -14,6 +14,8 @@ const DataComponent = (props: Props) => {
 
   const navigation = useNavigation();
   const [locations, setLocations] = useState<Array<any>>();
+
+  const today = getDate();
 
   useEffect(() => {
     const subscriber = firestore()
@@ -32,27 +34,50 @@ const DataComponent = (props: Props) => {
   }, []);
 
   return (
-    <FlatList
-      style={{paddingHorizontal: 25}}
-      data={locations}
-      renderItem={({item}) =>
-        category === item.category ? (
-          <CardComponent
-            id={item.id}
-            onPress={() =>
-              /* @ts-ignore */
-              navigation.navigate('EventDetailsScreen', {
-                data: item,
-              })
+    <View style={{flex: 1}}>
+      <FlatList
+        style={{paddingHorizontal: 25}}
+        data={locations}
+        renderItem={({item}) => {
+          if (category === item.category) {
+            if (item.type === 'event' && item.date >= today) {
+              return (
+                <CardComponent
+                  id={item.id}
+                  onPress={() =>
+                    /* @ts-ignore */
+                    navigation.navigate('EventDetailsScreen', {
+                      data: item,
+                    })
+                  }
+                  key={item.id}
+                  name={item.name}
+                  description={item.description}
+                  image={item.image}
+                />
+              );
+            } else if (item.type !== 'event') {
+              return (
+                <CardComponent
+                  id={item.id}
+                  onPress={() =>
+                    /* @ts-ignore */
+                    navigation.navigate('EventDetailsScreen', {
+                      data: item,
+                    })
+                  }
+                  key={item.id}
+                  name={item.name}
+                  description={item.description}
+                  image={item.image}
+                />
+              );
             }
-            key={item.id}
-            name={item.name}
-            description={item.description}
-            image={item.image}
-          />
-        ) : null
-      }
-    />
+          }
+          return null;
+        }}
+      />
+    </View>
   );
 };
 

@@ -10,6 +10,7 @@ import ReviewComponent from '../components/ReviewComponent';
 import {useAuth} from '../contexts/AuthContext';
 import MapsEventDetailsComponent from '../components/googlemaps/MapsEventDetailsComponent';
 import axios from 'axios';
+import {getDate} from '../hooks/getDate';
 
 /* @ts-ignore */
 const EventDetailsScreen = ({navigation, route}) => {
@@ -37,6 +38,7 @@ const EventDetailsScreen = ({navigation, route}) => {
   }, [data.map]);
 
   const currentUser = useAuth().userId;
+  const today = getDate();
 
   const [reviews, setReviews] = useState<Array<any>>();
   const [hasCommented, setHasCommented] = useState(false);
@@ -69,28 +71,41 @@ const EventDetailsScreen = ({navigation, route}) => {
 
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.container}>
-          <Image
-            source={{uri: data.image}}
-            style={styles.image}
-            resizeMode="cover"
-          />
-          <View style={styles.containerHeart}>
-            <LikeButtonComponent eventName={!data.nameEvent ? data.name : data.nameEvent} />
-          </View>
-      </View>
       <FabComponent styles={{top: 10, left: 16}} />
-      <Image
-        source={{uri: data.image}}
-        style={styles.image}
-        resizeMode="cover"
-      />
+      <View style={styles.container}>
+        <Image
+          source={{uri: data.image}}
+          style={styles.image}
+          resizeMode="cover"
+        />
+        {data.date != null && data.date < today && (
+          <View style={styles.notActive}>
+            <TextComponent
+              text="Este evento ha expirado"
+              color="white"
+              font="bold"
+            />
+          </View>
+        )}
+        <View style={styles.containerHeart}>
+          <LikeButtonComponent eventName={data.name} />
+        </View>
+      </View>
       <View style={styles.detailsContainer}>
         <TextComponent text={data.name} font="bold" size={28} />
-        <InfoItem icon="location" eventData="Ver dirección en el mapa" />
-        {data.date && <InfoItem icon="calendar" eventData={data.date} />}
-        {data.time && <InfoItem icon="time" eventData={data.time} />}
-        {data.price && <InfoItem icon="cash" eventData={data.price} />}
+        <InfoItem icon="location" eventData={direccion} />
+        {data.date && (
+          <InfoItem icon="calendar" eventData={`Fecha: ${data.date}`} />
+        )}
+        {data.time && (
+          <InfoItem icon="time" eventData={`Horario: ${data.time}`} />
+        )}
+        {data.price && (
+          <InfoItem icon="cash" eventData={`Costo: ${data.price}`} />
+        )}
+        {data.limitedCapacity && (
+          <InfoItem icon="people" eventData="Capacidad Limitada" />
+        )}
         <TextComponent text={data.description} />
       </View>
       <View style={styles.mapContainer}>
@@ -153,6 +168,13 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 15,
     left: '81%',
+  },
+  notActive: {
+    position: 'absolute',
+    zIndex: 10,
+    right: 0,
+    backgroundColor: 'red',
+    padding: 10,
   },
 });
 
