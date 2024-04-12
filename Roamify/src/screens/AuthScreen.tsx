@@ -7,8 +7,8 @@ import {
   StyleSheet,
   Image,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { globalStyles } from '../theme/globalStyles';
+import {useNavigation} from '@react-navigation/native';
+import {globalStyles} from '../theme/globalStyles';
 import SectionComponent from '../components/SectionComponent';
 import ButtonComponent from '../components/ButtonComponent';
 import TextComponent from '../components/TextComponent';
@@ -19,9 +19,8 @@ import firebase from '@react-native-firebase/firestore';
 import * as yup from 'yup';
 import LoadingComponent from '../components/LoadingComponent';
 import InputLabelComponent from '../components/common/InputLabelComponent';
-import { userAuthProp } from '../components/types';
+import {userAuthProp} from '../components/types';
 import ModalForgetPass from '../components/authentication/ModalForgetPass';
-
 
 const AuthScreen = () => {
   const [variant, setVariant] = useState<'LOGIN' | 'REGISTER'>('LOGIN');
@@ -31,19 +30,26 @@ const AuthScreen = () => {
   const [loading, setLoading] = useState(false);
   const [modalForgetPassVisible, setModalForgetPassVisible] = useState(false);
 
-  const schema = useMemo(() => yup.object().shape({
-    email: yup.string().email().required('El email es requerido'),
-    name: variant === 'REGISTER' ? yup
-      .string()
-      .min(3, 'El nombre debe tener al menos 3 caracteres')
-      .max(70, 'El nombre debe tener máximo 70 caracteres')
-      .required('El nombre es requerido') : yup.string(),
-    password: yup
-      .string()
-      .min(6, 'La contraseña debe tener al menos 6 caracteres')
-      .max(12, 'La contraseña debe tener máximo 12 caracteres')
-      .required('La contraseña es requerida'),
-  }), [variant]);
+  const schema = useMemo(
+    () =>
+      yup.object().shape({
+        email: yup.string().email().required('El email es requerido'),
+        name:
+          variant === 'REGISTER'
+            ? yup
+                .string()
+                .min(3, 'El nombre debe tener al menos 3 caracteres')
+                .max(70, 'El nombre debe tener máximo 70 caracteres')
+                .required('El nombre es requerido')
+            : yup.string(),
+        password: yup
+          .string()
+          .min(6, 'La contraseña debe tener al menos 6 caracteres')
+          .max(12, 'La contraseña debe tener máximo 12 caracteres')
+          .required('La contraseña es requerida'),
+      }),
+    [variant],
+  );
 
   const {handleSubmit, setError, control, getValues} = useForm<FormData>({
     resolver: async data => {
@@ -70,14 +76,12 @@ const AuthScreen = () => {
     },
   });
 
-  const handleLogin = ({ email, password }: userAuthProp) => {
+  const handleLogin = ({email, password}: userAuthProp) => {
     setLoading(true);
     auth()
       .signInWithEmailAndPassword(email, password)
       .then(userCredential => {
         const user = userCredential.user;
-      })
-      .then(userCredential => {
         navigation.navigate('HomeScreen');
       })
       .catch(error => {
@@ -103,8 +107,7 @@ const AuthScreen = () => {
       });
   };
 
-  const handleRegister = ({ name, email, password }: userAuthProp) => {
-
+  const handleRegister = ({name, email, password}: userAuthProp) => {
     setLoading(true);
     auth()
       .createUserWithEmailAndPassword(email, password)
@@ -152,9 +155,9 @@ const AuthScreen = () => {
     const values = getValues();
     const {name, email, password} = values;
     if (variant === 'LOGIN') {
-      handleLogin({ email, password });
+      handleLogin({email, password});
     } else {
-      handleRegister({ name, email, password });
+      handleRegister({name, email, password});
     }
   };
 
@@ -193,13 +196,12 @@ const AuthScreen = () => {
               />
               <SectionComponent>
                 {variant === 'REGISTER' && (
-
                   <InputLabelComponent
                     name="name"
                     placeholder="Escribe tu nombre"
                     style={globalStyles.inputPrimary}
                     control={control}
-                    rules={{ required: 'El nombre es requerido' }}
+                    rules={{required: 'El nombre es requerido'}}
                     textLabel={'Nombre'}
                   />
                 )}
@@ -208,7 +210,7 @@ const AuthScreen = () => {
                   placeholder="Escribe tu email"
                   style={globalStyles.inputPrimary}
                   control={control}
-                  rules={{ required: 'El email es requerido' }}
+                  rules={{required: 'El email es requerido'}}
                   textLabel={'Email'}
                 />
                 <InputLabelComponent
@@ -217,7 +219,7 @@ const AuthScreen = () => {
                   style={globalStyles.inputPrimary}
                   secureTextEntry
                   control={control}
-                  rules={{ required: 'la contraseña es requerido' }}
+                  rules={{required: 'la contraseña es requerido'}}
                   textLabel={'Contraseña'}
                 />
                 <ButtonComponent
@@ -226,7 +228,7 @@ const AuthScreen = () => {
                   onPress={handleSubmit(onSubmit)}
                 />
               </SectionComponent>
-              <View style={[styles.text, { marginVertical: 10 }]}>
+              <View style={[styles.text, {marginVertical: 10}]}>
                 <TextComponent
                   text={
                     variant === 'LOGIN'
@@ -238,18 +240,19 @@ const AuthScreen = () => {
                 />
                 <TouchableOpacity onPress={handleVariant}>
                   <Text style={styles.textLink}>
-
                     {variant === 'LOGIN' ? 'Regístrate' : 'Iniciar sesión'}
                   </Text>
                 </TouchableOpacity>
               </View>
-              {variant === 'LOGIN' &&
+              {variant === 'LOGIN' && (
                 <View style={styles.text}>
                   <TouchableOpacity onPress={handleForgetPassword}>
-                    <Text style={styles.textLink}>¿Olvidaste tu contraseña?</Text>
+                    <Text style={styles.textLink}>
+                      ¿Olvidaste tu contraseña?
+                    </Text>
                   </TouchableOpacity>
                 </View>
-              }
+              )}
             </View>
           </View>
           <ModalForgetPass
@@ -316,12 +319,12 @@ const styles = StyleSheet.create({
   },
   textLink: {
     color: '#47C6E6',
-    textDecorationLine: 'underline'
+    textDecorationLine: 'underline',
   },
   text: {
     flexDirection: 'row',
     justifyContent: 'center',
-  }
+  },
 });
 
 export default AuthScreen;

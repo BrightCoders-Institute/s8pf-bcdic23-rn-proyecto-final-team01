@@ -9,10 +9,7 @@ export const uploadImageStorange = async ({
 }: ImageStorageProp): Promise<string> => {
   try {
     if (!uri) {
-      console.log(
-        'No image selected',
-        'Please select an image before uploading',
-      );
+      console.log('No image selected, Please select an image before uploading');
       console.log('Error: Selecciona una imagen porfavor');
     }
     const newName = createRadomName();
