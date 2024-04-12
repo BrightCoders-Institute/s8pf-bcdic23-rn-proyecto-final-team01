@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Pressable, View, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import firestore from '@react-native-firebase/firestore';
+import  firestore from '@react-native-firebase/firestore';
+import firebase from '@react-native-firebase/firestore';
 import { useAuth } from '../contexts/AuthContext';
 
-const LikeButtonComponent = ({eventName}) => {
+const LikeButtonComponent = ({eventId, eventName}) => {
     const { userId } = useAuth();
     const [liked, setLiked] = useState(false);
 
     useEffect(() => {
         const checkInitialLikeState = async () => {
             try {
-                const favoriteRef = firestore().collection('users').doc(userId).collection('favorites').doc(eventName);
+                const favoriteRef = firestore().collection('users').doc(userId).collection('favorites').doc(eventId);
                 const doc = await favoriteRef.get();
                 if (doc.exists) {
                     setLiked(true);
@@ -22,17 +23,19 @@ const LikeButtonComponent = ({eventName}) => {
         };
 
         checkInitialLikeState();
-    }, [eventName, userId]);
+    }, [eventId, userId]);
 
     const handleLikePress = async () => {
         try {
-            const favoriteRef = firestore().collection('users').doc(userId).collection('favorites').doc(eventName);
+            const favoriteRef = firestore().collection('users').doc(userId).collection('favorites').doc(eventId);
 
             if (liked) {
                 await favoriteRef.delete();
             } else {
                 await favoriteRef.set({
                     liked: true,
+                    event: eventName,
+                    timestamp: firestore.FieldValue.serverTimestamp()
                 });
             }
 
@@ -41,7 +44,7 @@ const LikeButtonComponent = ({eventName}) => {
             console.error('Error al manejar el like: ', error);
         }
     };
-    if (!eventName) {
+    if (!eventId) {
         return null; 
     }
 
