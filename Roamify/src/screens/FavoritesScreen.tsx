@@ -1,26 +1,31 @@
-import {View} from 'react-native';
-import React from 'react';
-import {globalStyles} from '../theme/globalStyles';
+import {StyleSheet, TextInput, View} from 'react-native';
 import Header from '../components/Header';
 import NavBar from '../components/NavBar';
+import {globalStyles} from '../theme/globalStyles';
+import FavoritesDataComponent from '../components/FavoritesDataComponent';
 import TextComponent from '../components/TextComponent';
-import BarComponent from '../components/BarComponent';
-import CardComponent from '../components/CardComponent';
+
 
 const FavoritesScreen = () => {
+
+  
   return (
     <View style={globalStyles.screen}>
       <Header />
-      <TextComponent
-        text="Tus Favoritos"
-        font="bold"
-        size={25}
-        styles={{paddingLeft: 25, paddingVertical: 15}}
-      />
-      <View style={{flex: 1}}></View>
+      <View style={styles.container}>
+        <TextComponent text="Tus eventos favoritos" font="bold" size={28} styles={{paddingHorizontal: 30}}/>
+        <FavoritesDataComponent/>
+      </View>
       <NavBar />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    marginTop: 15, 
+    flex: 1
+  },
+});
 
 export default FavoritesScreen;

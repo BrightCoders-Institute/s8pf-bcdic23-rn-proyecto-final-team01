@@ -88,7 +88,7 @@ const EventDetailsScreen = ({navigation, route}) => {
           </View>
         )}
         <View style={styles.containerHeart}>
-          <LikeButtonComponent eventName={data.name} />
+          <LikeButtonComponent eventId={data.id} eventName={data.name}/>
         </View>
       </View>
       <View style={styles.detailsContainer}>
