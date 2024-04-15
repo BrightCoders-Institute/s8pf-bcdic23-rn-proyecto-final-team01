@@ -4,9 +4,12 @@ import NavBar from '../components/NavBar';
 import {globalStyles} from '../theme/globalStyles';
 import FavoritesDataComponent from '../components/FavoritesDataComponent';
 import TextComponent from '../components/TextComponent';
+import { useIsFocused } from '@react-navigation/native';
 
 
 const FavoritesScreen = () => {
+  const isFocused = useIsFocused();
+  
 
   
   return (
@@ -14,7 +17,7 @@ const FavoritesScreen = () => {
       <Header />
       <View style={styles.container}>
         <TextComponent text="Tus eventos favoritos" font="bold" size={28} styles={{paddingHorizontal: 30}}/>
-        <FavoritesDataComponent/>
+        <FavoritesDataComponent isFocused={isFocused} />
       </View>
       <NavBar />
     </View>

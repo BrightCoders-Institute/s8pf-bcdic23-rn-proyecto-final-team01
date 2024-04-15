@@ -7,13 +7,21 @@ import { getDate } from '../hooks/getDate';
 import { getFavorites } from '../hooks/getFavorites';
 import { useAuth } from '../contexts/AuthContext';
 
-const FavoritesDataComponent = () => {
+interface FavoritesDataComponentProps {
+  isFocused: boolean;
+}
+
+const FavoritesDataComponent = (props: FavoritesDataComponentProps) => {
+  const { isFocused } = props;
   const navigation = useNavigation();
   const [favoriteLocations, setFavoriteLocations] = useState([]);
   const today = getDate();
   const { userId } = useAuth();
 
   useEffect(() => {
+    if (!isFocused) {
+      return;
+    }
     const fetchFavoriteEventIds = async () => {
       try {
         const favoritesData = await getFavorites(userId);
@@ -26,10 +34,12 @@ const FavoritesDataComponent = () => {
     };
 
     fetchFavoriteEventIds();
-  }, [userId]);
+  }, [userId, isFocused]);
 
   const fetchLocations = async (favoriteEventIds) => {
-    if (favoriteEventIds.length === 0) return [];
+    if (!isFocused || favoriteEventIds.length === 0) {
+      return [];
+    }
 
     const locationsArray = [];
     const locationsSnapshot = await firestore()
@@ -60,6 +70,7 @@ const FavoritesDataComponent = () => {
             name={item.name}
             description={item.description}
             image={item.image}
+            favorite
           />
         )}
       />
