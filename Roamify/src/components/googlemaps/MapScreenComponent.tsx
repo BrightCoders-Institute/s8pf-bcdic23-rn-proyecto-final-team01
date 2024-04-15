@@ -8,7 +8,11 @@ interface Marker {
   title: string;
   type: string;
 }
-const MapScreenComponent = () => {
+interface Props {
+  searchText: string;
+}
+const MapScreenComponent = (props: Props) => {
+  const {searchText} = props;
   const [markers, setMarkers] = useState<Marker[]>([]);
   const [selectedRegion, setSelectedRegion] = useState({
     latitude: 19.12303,
@@ -17,7 +21,7 @@ const MapScreenComponent = () => {
     longitudeDelta: 0.05,
   });
   useEffect(() => {
-    const unsubscribe = firestore()
+    const subscribe = firestore()
       .collection('locations')
       .onSnapshot(querySnapshot => {
         const _markers = querySnapshot.docs.map(doc => {
@@ -28,18 +32,31 @@ const MapScreenComponent = () => {
             latitude: mapData.latitude as number,
             longitude: mapData.longitude as number,
             title: data.name as string,
-            type: data.type as string,
+            type: data.type ? data.type as string : 'not_event',
           };
         });
         setMarkers(_markers);
       });
-    return () => unsubscribe();
+    return () => subscribe();
   }, []);
 
+  
+
+  const normalizeText = (text: string) => {
+    return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  };
+
+  const filteredMarkers = markers.filter((marker) => {// filtrar marcadores basados en el texto de búsqueda
+    const titleNormalized = normalizeText(marker.title);
+    const searchTextNormalized = normalizeText(searchText);
+    return titleNormalized.includes(searchTextNormalized);
+  });
+  const markersToShow = searchText && filteredMarkers.length > 0 ? filteredMarkers : markers;
   return (
     <View style={styles.container}>
-      <MapView style={styles.map} initialRegion={selectedRegion}>
-        {markers.map((marker, index) => (
+      <MapView key={markersToShow.length} style={styles.map} initialRegion={selectedRegion}>
+      {markersToShow.map((marker, index) => {
+        return (
           <Marker
             key={index}
             pinColor={marker.type === 'event' ? 'blue' : 'red'}
@@ -49,7 +66,8 @@ const MapScreenComponent = () => {
             }}
             title={marker.title}
           />
-        ))}
+        );
+      })}
       </MapView>
     </View>
   );
