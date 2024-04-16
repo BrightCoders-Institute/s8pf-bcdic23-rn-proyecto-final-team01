@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import MapView, {Marker} from 'react-native-maps';
+import MapView, {Circle, Marker} from 'react-native-maps';
 import firestore from '@react-native-firebase/firestore';
+import {CoordsProps} from '../types';
 interface Marker {
   latitude: number;
   longitude: number;
@@ -10,15 +11,16 @@ interface Marker {
 }
 interface Props {
   searchText: string;
+  location: CoordsProps;
 }
 const MapScreenComponent = (props: Props) => {
-  const {searchText} = props;
+  const {searchText, location} = props;
   const [markers, setMarkers] = useState<Marker[]>([]);
   const [selectedRegion, setSelectedRegion] = useState({
-    latitude: 19.12303,
-    longitude: -104.325359,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.05,
+    latitude: location.latitude,
+    longitude: location.longitude,
+    latitudeDelta: 0.025,
+    longitudeDelta: 0.025,
   });
   useEffect(() => {
     const subscribe = firestore()
@@ -32,7 +34,7 @@ const MapScreenComponent = (props: Props) => {
             latitude: mapData.latitude as number,
             longitude: mapData.longitude as number,
             title: data.name as string,
-            type: data.type ? data.type as string : 'not_event',
+            type: data.type ? (data.type as string) : 'not_event',
           };
         });
         setMarkers(_markers);
@@ -40,34 +42,49 @@ const MapScreenComponent = (props: Props) => {
     return () => subscribe();
   }, []);
 
-  
-
   const normalizeText = (text: string) => {
-    return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    return text
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase();
   };
 
-  const filteredMarkers = markers.filter((marker) => {// filtrar marcadores basados en el texto de búsqueda
+  const filteredMarkers = markers.filter(marker => {
+    // filtrar marcadores basados en el texto de búsqueda
     const titleNormalized = normalizeText(marker.title);
     const searchTextNormalized = normalizeText(searchText);
     return titleNormalized.includes(searchTextNormalized);
   });
-  const markersToShow = searchText && filteredMarkers.length > 0 ? filteredMarkers : markers;
+  const markersToShow =
+    searchText && filteredMarkers.length > 0 ? filteredMarkers : markers;
   return (
     <View style={styles.container}>
-      <MapView key={markersToShow.length} style={styles.map} initialRegion={selectedRegion}>
-      {markersToShow.map((marker, index) => {
-        return (
-          <Marker
-            key={index}
-            pinColor={marker.type === 'event' ? 'blue' : 'red'}
-            coordinate={{
-              latitude: marker.latitude,
-              longitude: marker.longitude,
-            }}
-            title={marker.title}
-          />
-        );
-      })}
+      <MapView
+        key={markersToShow.length}
+        style={styles.map}
+        initialRegion={selectedRegion}>
+        <Circle
+          center={{
+            latitude: location.latitude,
+            longitude: location.longitude,
+          }}
+          radius={40}
+          strokeColor="white"
+          fillColor="blue"
+        />
+        {markersToShow.map((marker, index) => {
+          return (
+            <Marker
+              key={index}
+              pinColor={marker.type === 'event' ? 'blue' : 'red'}
+              coordinate={{
+                latitude: marker.latitude,
+                longitude: marker.longitude,
+              }}
+              title={marker.title}
+            />
+          );
+        })}
       </MapView>
     </View>
   );
