@@ -3,11 +3,13 @@ import {StyleSheet, View} from 'react-native';
 import MapView, {Circle, Marker} from 'react-native-maps';
 import firestore from '@react-native-firebase/firestore';
 import {CoordsProps} from '../types';
+import {getDate} from '../../hooks/getDate';
 interface Marker {
   latitude: number;
   longitude: number;
   title: string;
   type: string;
+  date: string | null;
 }
 interface Props {
   searchText: string;
@@ -21,6 +23,7 @@ const MapScreenComponent = (props: Props) => {
     longitude: location.longitude,
     latitudeDelta: 0.025,
     longitudeDelta: 0.025,
+    
   });
   useEffect(() => {
     const subscribe = firestore()
@@ -35,6 +38,7 @@ const MapScreenComponent = (props: Props) => {
             longitude: mapData.longitude as number,
             title: data.name as string,
             type: data.type ? (data.type as string) : 'not_event',
+            date: data.date as string | null,
           };
         });
         setMarkers(_markers);
@@ -49,8 +53,9 @@ const MapScreenComponent = (props: Props) => {
       .toLowerCase();
   };
 
+  const today = getDate();
+
   const filteredMarkers = markers.filter(marker => {
-    // filtrar marcadores basados en el texto de búsqueda
     const titleNormalized = normalizeText(marker.title);
     const searchTextNormalized = normalizeText(searchText);
     return titleNormalized.includes(searchTextNormalized);
@@ -73,17 +78,20 @@ const MapScreenComponent = (props: Props) => {
           fillColor="blue"
         />
         {markersToShow.map((marker, index) => {
-          return (
-            <Marker
-              key={index}
-              pinColor={marker.type === 'event' ? 'blue' : 'red'}
-              coordinate={{
-                latitude: marker.latitude,
-                longitude: marker.longitude,
-              }}
-              title={marker.title}
-            />
-          );
+          if (marker.date === null || marker.date >= today) {
+            return (
+              <Marker
+                key={index}
+                pinColor={marker.type === 'event' ? 'blue' : 'red'}
+                coordinate={{
+                  latitude: marker.latitude,
+                  longitude: marker.longitude,
+                }}
+                title={marker.title}
+              />
+            );
+          }
+          return null;
         })}
       </MapView>
     </View>
