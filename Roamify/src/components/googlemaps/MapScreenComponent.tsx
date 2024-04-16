@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import MapView, {Marker} from 'react-native-maps';
+import MapView, {Circle, Marker} from 'react-native-maps';
 import firestore from '@react-native-firebase/firestore';
-import {date} from 'yup';
+import {CoordsProps} from '../types';
 import {getDate} from '../../hooks/getDate';
 interface Marker {
   latitude: number;
@@ -13,15 +13,17 @@ interface Marker {
 }
 interface Props {
   searchText: string;
+  location: CoordsProps;
 }
 const MapScreenComponent = (props: Props) => {
-  const {searchText} = props;
+  const {searchText, location} = props;
   const [markers, setMarkers] = useState<Marker[]>([]);
   const [selectedRegion, setSelectedRegion] = useState({
-    latitude: 19.12303,
-    longitude: -104.325359,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.05,
+    latitude: location.latitude,
+    longitude: location.longitude,
+    latitudeDelta: 0.025,
+    longitudeDelta: 0.025,
+    
   });
   useEffect(() => {
     const subscribe = firestore()
@@ -66,6 +68,15 @@ const MapScreenComponent = (props: Props) => {
         key={markersToShow.length}
         style={styles.map}
         initialRegion={selectedRegion}>
+        <Circle
+          center={{
+            latitude: location.latitude,
+            longitude: location.longitude,
+          }}
+          radius={40}
+          strokeColor="white"
+          fillColor="blue"
+        />
         {markersToShow.map((marker, index) => {
           if (marker.date === null || marker.date >= today) {
             return (
