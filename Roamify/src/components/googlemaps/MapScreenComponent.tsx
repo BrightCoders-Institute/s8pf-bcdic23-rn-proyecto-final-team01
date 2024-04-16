@@ -2,26 +2,27 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import MapView, {Marker} from 'react-native-maps';
 import firestore from '@react-native-firebase/firestore';
-interface Marker {
+import {getDate} from '../../hooks/getDate';
+
+interface MarkerData {
   latitude: number;
   longitude: number;
   title: string;
   type: string;
+  date: string | null;
 }
-interface Props {
-  searchText: string;
-}
-const MapScreenComponent = (props: Props) => {
-  const {searchText} = props;
-  const [markers, setMarkers] = useState<Marker[]>([]);
+
+const MapScreenComponent = () => {
+  const [markers, setMarkers] = useState<MarkerData[]>([]);
   const [selectedRegion, setSelectedRegion] = useState({
     latitude: 19.12303,
     longitude: -104.325359,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.05,
   });
+
   useEffect(() => {
-    const subscribe = firestore()
+    const unsubscribe = firestore()
       .collection('locations')
       .onSnapshot(querySnapshot => {
         const _markers = querySnapshot.docs.map(doc => {
@@ -32,42 +33,37 @@ const MapScreenComponent = (props: Props) => {
             latitude: mapData.latitude as number,
             longitude: mapData.longitude as number,
             title: data.name as string,
-            type: data.type ? data.type as string : 'not_event',
+            type: data.type as string,
+            date: data.date as string | null,
           };
         });
         setMarkers(_markers);
       });
-    return () => subscribe();
+
+    return () => unsubscribe();
   }, []);
 
-  
+  const today = getDate();
 
-  const normalizeText = (text: string) => {
-    return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-  };
-
-  const filteredMarkers = markers.filter((marker) => {// filtrar marcadores basados en el texto de búsqueda
-    const titleNormalized = normalizeText(marker.title);
-    const searchTextNormalized = normalizeText(searchText);
-    return titleNormalized.includes(searchTextNormalized);
-  });
-  const markersToShow = searchText && filteredMarkers.length > 0 ? filteredMarkers : markers;
   return (
     <View style={styles.container}>
-      <MapView key={markersToShow.length} style={styles.map} initialRegion={selectedRegion}>
-      {markersToShow.map((marker, index) => {
-        return (
-          <Marker
-            key={index}
-            pinColor={marker.type === 'event' ? 'blue' : 'red'}
-            coordinate={{
-              latitude: marker.latitude,
-              longitude: marker.longitude,
-            }}
-            title={marker.title}
-          />
-        );
-      })}
+      <MapView style={styles.map} initialRegion={selectedRegion}>
+        {markers.map((marker, index) => {
+          if (marker.date === null || marker.date >= today) {
+            return (
+              <Marker
+                key={index}
+                pinColor={marker.type === 'event' ? 'blue' : 'red'}
+                coordinate={{
+                  latitude: marker.latitude,
+                  longitude: marker.longitude,
+                }}
+                title={marker.title}
+              />
+            );
+          }
+          return null;
+        })}
       </MapView>
     </View>
   );
