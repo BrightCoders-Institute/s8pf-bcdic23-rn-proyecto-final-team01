@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Pressable, View, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import  firestore from '@react-native-firebase/firestore';
+import firebase from '@react-native-firebase/firestore';
 import { useAuth } from '../contexts/AuthContext';
 
 const LikeButtonComponent = ({eventId, eventName}) => {

@@ -9,6 +9,10 @@ import DataComponent from '../components/DataComponent';
 
 const HomeScreen = () => {
   const [category, setCategory] = useState('Destacado');
+  const [searchQuery, setSearchQuery] = useState('');
+  const handleSearch = (text) => {
+    setSearchQuery(text);
+  };
 
   return (
     <View style={globalStyles.screen}>
@@ -24,13 +28,15 @@ const HomeScreen = () => {
           placeholder="Busca un lugar o evento"
           placeholderTextColor="#6A6A6A"
           style={globalStyles.inputSecondary}
+          onChangeText={handleSearch}
+          value={searchQuery}
         />
       </View>
       <View style={{marginTop: 15, flex: 1}}>
         <View style={{paddingBottom: 15}}>
           <BarComponent setSelectedCategory={setCategory} />
         </View>
-        <DataComponent category={category} />
+        <DataComponent category={category} searchQuery={searchQuery} setCategory={setCategory}/>
       </View>
       <NavBar />
     </View>
