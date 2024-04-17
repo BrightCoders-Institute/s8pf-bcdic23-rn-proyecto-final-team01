@@ -12,6 +12,12 @@ import {CoordsProps} from '../components/types';
 const MapScreen = () => {
   const [searchText, setSearchText] = useState('');
   const [location, setLocation] = useState<CoordsProps>(null);
+  const [isSearchActive, setIsSearchActive] = useState(false);
+  const [filteredMarkers, setFilteredMarkers] = useState([]); 
+  const handleSearchTextChange = (text: string) => {
+    setSearchText(text);
+    setIsSearchActive(text.length > 0 || filteredMarkers.length === 0); // Oculta la ficha de información cuando se escribe en el TextInput
+  };
 
   useEffect(() => {
     Geolocation.getCurrentPosition(
@@ -31,7 +37,7 @@ const MapScreen = () => {
         <View style={globalStyles.screen}>
           <Header />
           <View style={{...styles.mapContainer, zIndex: 1}}>
-            <MapScreenComponent searchText={searchText} location={location} />
+            <MapScreenComponent searchText={searchText} location={location} isSearchActive={isSearchActive} filteredMarkers={filteredMarkers} />
             <View style={styles.searchBar}>
               <Icon
                 name="search"
@@ -44,7 +50,7 @@ const MapScreen = () => {
                 placeholderTextColor="#6A6A6A"
                 style={{...styles.searchInput, paddingLeft: 50}}
                 value={searchText}
-                onChangeText={setSearchText}
+                onChangeText={handleSearchTextChange}
               />
             </View>
           </View>
