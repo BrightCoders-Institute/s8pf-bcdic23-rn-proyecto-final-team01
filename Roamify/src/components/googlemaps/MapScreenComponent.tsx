@@ -28,10 +28,10 @@ const MapScreenComponent = (props: Props) => {
   const [selectedMarker, setSelectedMarker] = useState<Marker | null>(null);
   const navigation = useNavigation();
   const [selectedRegion, setSelectedRegion] = useState({
-    latitude: location.latitude,
-    longitude: location.longitude,
-    latitudeDelta: 0.025,
-    longitudeDelta: 0.025,
+    latitude: 19.1232,
+    longitude: -104.3350,
+    latitudeDelta: 0.023,
+    longitudeDelta: 0.058,
     
   });
   useEffect(() => {
@@ -140,7 +140,10 @@ const MapScreenComponent = (props: Props) => {
         {showInfo && selectedMarker && (
           <TouchableWithoutFeedback>
             <View style={styles.infoCard}>
-            <Text style={styles.title}>{selectedMarker.name}</Text><AverageGrade id={selectedMarker.id} style={styles.bottom10}/>
+              <Text style={styles.title}>{selectedMarker.name}</Text>
+              <View style={styles.averagecontainer}>
+                <AverageGrade id={selectedMarker.id} style={styles.bottom10}/>
+              </View>
             <Image
                 source={{uri: selectedMarker.image}}
                 style={styles.infoImage}
@@ -169,7 +172,7 @@ const styles = StyleSheet.create({
   },
   infoCard: {
     position: 'absolute',
-    bottom: 45,
+    bottom: 50,
     left: 30,
     right: 30,
     backgroundColor: 'white',
@@ -184,10 +187,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: 'black',
-    bottom: 8,
+    bottom: -10,
   },
   infoButton: {
-    marginTop: 10,
+    marginTop: 8,
     backgroundColor: '#007bff',
     padding: 10,
     borderRadius: 5,
@@ -203,7 +206,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   bottom10: {
-    bottom: 8
+    bottom: 13,
+  },
+  averagecontainer: {
+    alignItems: 'flex-end',
   }
 
 });

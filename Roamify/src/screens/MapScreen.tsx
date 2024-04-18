@@ -1,4 +1,4 @@
-import {Platform, StyleSheet, TextInput, View} from 'react-native';
+import {Platform, StyleSheet, TextInput, View, Keyboard} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Header from '../components/Header';
 import NavBar from '../components/NavBar';
@@ -14,10 +14,24 @@ const MapScreen = () => {
   const [location, setLocation] = useState<CoordsProps>(null);
   const [isSearchActive, setIsSearchActive] = useState(false);
   const [filteredMarkers, setFilteredMarkers] = useState([]); 
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
   const handleSearchTextChange = (text: string) => {
     setSearchText(text);
     setIsSearchActive(text.length > 0 || filteredMarkers.length === 0); // Oculta la ficha de información cuando se escribe en el TextInput
   };
+  useEffect(() => {
+    const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
+      setKeyboardVisible(true);
+    });
+    const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardVisible(false);
+    });
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
 
   useEffect(() => {
     Geolocation.getCurrentPosition(
@@ -54,7 +68,7 @@ const MapScreen = () => {
               />
             </View>
           </View>
-          <NavBar />
+          {!keyboardVisible && <NavBar />} 
         </View>
       ) : (
         <LoadingComponent />
@@ -70,7 +84,7 @@ const styles = StyleSheet.create({
   },
   searchBar: {
     position: 'absolute',
-    top: Platform.OS === 'ios' ? 88 : 40,
+    top: Platform.OS === 'ios' ? 88 : 20,
     left: 10,
     right: 10,
     flexDirection: 'row',
