@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, StyleProp, ViewStyle} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import TextComponent from './TextComponent';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -6,10 +6,11 @@ import {getReviews} from '../hooks/getReviews';
 
 interface Props {
   id: string;
+  style?: StyleProp<ViewStyle>; 
 }
 
 const AverageGrade = (props: Props) => {
-  const {id} = props;
+  const {id, style} = props;
 
   const [reviews, setReviews] = useState<Array<any>>();
 
@@ -42,7 +43,7 @@ const AverageGrade = (props: Props) => {
 
   return (
     sumAllRatings != '' && (
-      <View style={styles.container}>
+      <View style={[styles.container, style]}>
         <TextComponent text={average.toString()} font="bold" />
         <Icon name="star" size={25} color="#A8BD29" />
       </View>
