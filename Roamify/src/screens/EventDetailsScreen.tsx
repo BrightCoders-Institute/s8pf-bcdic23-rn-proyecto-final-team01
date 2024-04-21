@@ -11,11 +11,14 @@ import {useAuth} from '../contexts/AuthContext';
 import MapsEventDetailsComponent from '../components/googlemaps/MapsEventDetailsComponent';
 import axios from 'axios';
 import {getDate} from '../hooks/getDate';
+import LoadingComponent from '../components/LoadingComponent';
 
 /* @ts-ignore */
 const EventDetailsScreen = ({navigation, route}) => {
   const {data} = route.params;
   const [direccion, setDireccion] = useState('');
+  const [loading, setLoading] = useState(true);
+
   const obtenerDireccionOSM = async (lat, lon) => {
     const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`;
 
@@ -32,9 +35,13 @@ const EventDetailsScreen = ({navigation, route}) => {
     }
   };
   useEffect(() => {
+    const fetchData = async () => {
     if (data?.map?.latitude && data?.map?.longitude) {
-      obtenerDireccionOSM(data.map.latitude, data.map.longitude);
+      await obtenerDireccionOSM(data.map.latitude, data.map.longitude);
+      setLoading(false);
     }
+  };
+  fetchData();
   }, [data.map]);
 
   const currentUser = useAuth().userId;
@@ -71,6 +78,7 @@ const EventDetailsScreen = ({navigation, route}) => {
 
   return (
     <ScrollView style={styles.container}>
+       {loading && <LoadingComponent />}
       <FabComponent styles={{top: 10, left: 16}} />
       <View style={styles.container}>
         <Image
