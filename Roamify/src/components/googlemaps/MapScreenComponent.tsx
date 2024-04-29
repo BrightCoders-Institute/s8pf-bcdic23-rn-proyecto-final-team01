@@ -28,10 +28,10 @@ const MapScreenComponent = (props: Props) => {
   const [selectedMarker, setSelectedMarker] = useState<Marker | null>(null);
   const navigation = useNavigation();
   const [selectedRegion, setSelectedRegion] = useState({
-    latitude: 19.1232,
-    longitude: -104.3350,
-    latitudeDelta: 0.023,
-    longitudeDelta: 0.058,
+    latitude: location.latitude,
+    longitude: location.longitude,
+    latitudeDelta: 0.02,
+    longitudeDelta: 0.02,
     
   });
   useEffect(() => {

@@ -4,6 +4,19 @@ import TextComponent from './TextComponent';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {getReviews} from '../hooks/getReviews';
 
+
+export const calculateAverageRating = (reviews) => {
+  if (!reviews || reviews.length === 0) return null; // retorn null si no hay reviews
+
+  const ratingsArray = reviews.map(review => review.rating);
+  const sumAllRatings = ratingsArray.reduce(
+    (accumulator, currentValue) => accumulator + currentValue,
+    0,
+  );
+  const average = Math.round((sumAllRatings / reviews.length) * 10) / 10;
+  return average;
+};
+
 interface Props {
   id: string;
   style?: StyleProp<ViewStyle>; 
@@ -26,28 +39,19 @@ const AverageGrade = (props: Props) => {
     };
 
     fetchReviews();
-  }, []);
+  }, [id]);
 
   if (!reviews) {
     return null;
   }
 
-  const ratingsArray = reviews.map(rev => rev.rating);
+  const average = reviews ? calculateAverageRating(reviews) : null;
 
-  const sumAllRatings = ratingsArray.reduce(
-    (accumulator, currentValue) => accumulator + currentValue,
-    0,
-  );
-
-  const average = Math.round((sumAllRatings / reviews?.length) * 10) / 10;
-
-  return (
-    sumAllRatings != '' && (
-      <View style={[styles.container, style]}>
-        <TextComponent text={average.toString()} font="bold" />
-        <Icon name="star" size={25} color="#A8BD29" />
-      </View>
-    )
+  return average != null && (
+    <View style={[styles.container, style]}>
+      <TextComponent text={average.toString()} font="bold" />
+      <Icon name="star" size={25} color="#A8BD29" />
+    </View>
   );
 };
 

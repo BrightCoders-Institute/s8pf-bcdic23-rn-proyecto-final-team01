@@ -1,9 +1,11 @@
-import {FlatList, View} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import CardComponent from './CardComponent';
-import {useNavigation} from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
+import { View, FlatList } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
-import {getDate} from '../hooks/getDate';
+import CardComponent from './CardComponent';
+import { getDate } from '../hooks/getDate';
+import { getReviews } from '../hooks/getReviews';
+import { calculateAverageRating } from './AverageGrade';
 
 interface Props {
   category?: string;
@@ -12,39 +14,48 @@ interface Props {
 }
 
 const DataComponent = (props: Props) => {
-  const {category, searchQuery, setCategory} = props;
-
+  const { category, searchQuery, setCategory } = props;
   const navigation = useNavigation();
   const [locations, setLocations] = useState<Array<any>>();
-
   const today = getDate();
 
   useEffect(() => {
     const queryBase = firestore().collection('locations');
-  
-    const subscriber = queryBase.onSnapshot(querySnapshot => {
+    const subscriber = queryBase.onSnapshot(async querySnapshot => {
       let locationsArray = querySnapshot.docs.map(documentSnapshot => ({
         ...documentSnapshot.data(),
         id: documentSnapshot.id,
       }));
-  
-      if (searchQuery) {// Filtrado de  búsqueda si hay
+
+      if (searchQuery) {
         const lowerCaseSearchQuery = searchQuery.toLowerCase();
         locationsArray = locationsArray.filter(item =>
           item.name.toLowerCase().includes(lowerCaseSearchQuery)
         );
-      } else if (category && category !== 'Destacado') {// aqui filtro por categoria si es que no  hay busqueda y la categoria no es destacado
+      } else if (category && category !== 'Destacado') {
         locationsArray = locationsArray.filter(item => item.category === category);
-      } else if (category === 'Destacado') {// si es destacado y no hay busqueda no mostrar nada pero si busqueda
-        locationsArray = [];
+      } else if (category === 'Destacado') {
+        locationsArray = await filterHighlightedLocations(locationsArray);
       }
-  
+
       setLocations(locationsArray);
     });
-  
+
     return () => subscriber();
-  }, [searchQuery, category]); // Dependencias: búsqueda y categoría.
-   
+  }, [searchQuery, category]);
+
+  const filterHighlightedLocations = async (locationsArray) => {
+    const filteredLocations = [];
+    for (const location of locationsArray) {
+      const reviewsData = await getReviews(location.id);
+      const average = calculateAverageRating(reviewsData?.reviewsData);
+      if (average >= 4.5) {
+        filteredLocations.push(location);
+      }
+    }
+    return filteredLocations;
+  };
+
   const renderItem = ({ item }) => {
     const isCategoryMatch = category === item.category;
     const isSearchMatch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
