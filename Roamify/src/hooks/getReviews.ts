@@ -11,7 +11,6 @@ export const getReviews = async (id: string) => {
       id: doc.id,
       ...doc.data(),
     }));
-
     return {reviewsData};
   } catch (error) {
     console.error('Error fetching the items: ' + error);

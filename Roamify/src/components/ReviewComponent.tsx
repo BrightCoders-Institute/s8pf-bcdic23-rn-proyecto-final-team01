@@ -53,7 +53,6 @@ const ReviewComponent = ({locationId}) => {
             rating,
           })
           .then(() => {
-            console.log('Review Added!');
             setHidden(true);
           });
       } else {

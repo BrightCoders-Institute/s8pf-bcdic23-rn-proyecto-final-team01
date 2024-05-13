@@ -1,7 +1,13 @@
 import storage from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore';
-import {ImageStorageProp, ResquestUpdateUser} from './types';
+import {
+  ImageStorageProp,
+  ResquestReviewsProps,
+  ResquestUpdateUser,
+  ResquestlocationProps,
+} from './types';
 import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
+import {getReviews} from '../hooks/getReviews';
 
 export const uploadImageStorange = async ({
   uri,
@@ -84,4 +90,43 @@ export const changePassword = async (password: string, newPassword: string) => {
   } else {
     console.error('No hay un usuario autenticado');
   }
+};
+
+export const getHighlightedLocations = async (
+  locationsArray: ResquestlocationProps[],
+) => {
+  const filteredLocations = [];
+  for (const location of locationsArray) {
+    const reviewsData = await getReviews(location.id);
+    if (
+      reviewsData &&
+      reviewsData.reviewsData &&
+      reviewsData.reviewsData.length > 0
+    ) {
+      const _reviewsData: ResquestReviewsProps[] = reviewsData.reviewsData;
+      const average = calculateAverageRating(_reviewsData);
+      if (average && average >= 4.5) {
+        filteredLocations.push(location);
+      }
+    }
+  }
+  return filteredLocations;
+};
+
+export const calculateAverageRating = (
+  reviews: ResquestReviewsProps[],
+): number | null => {
+  const validReviews = reviews.filter(
+    review => typeof review.rating !== 'undefined',
+  );
+  if (validReviews.length === 0) return null;
+  const ratingsArray: number[] = validReviews.map(
+    review => review.rating as number,
+  );
+  const sumAllRatings = ratingsArray.reduce(
+    (accumulator, currentValue) => accumulator + currentValue,
+    0,
+  );
+  const average = Math.round((sumAllRatings / validReviews.length) * 10) / 10;
+  return average;
 };

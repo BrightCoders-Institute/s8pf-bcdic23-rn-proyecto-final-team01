@@ -91,3 +91,45 @@ export type CoordsProps = {
   latitude: number;
   longitude: number;
 };
+
+export type ResquestlocationProps = {
+  category?: string;
+  date?: string;
+  description?: string;
+  image?: string;
+  limitedCapacity?: boolean;
+  map?: mapProp;
+  price?: string;
+  time?: string;
+  type?: string;
+  name?: string;
+  userId?: string;
+  id: string;
+}
+
+export type LocationProps = {
+  category: string;
+  date: string;
+  description: string;
+  image: string;
+  limitedCapacity?: boolean;
+  map?: mapProp;
+  price?: string;
+  time?: string;
+  type?: string;
+  name: string;
+  userId?: string;
+  id: string;
+}
+
+export type ResquestReviewsProps = {
+  id: string;
+  userId?: string;
+  review?: string;
+  rating?: number;
+}
+
+export type mapProp = {
+  latitude: number;
+  longitude: number;
+}
