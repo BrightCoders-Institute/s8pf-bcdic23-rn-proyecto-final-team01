@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, Text, TouchableOpacity, TouchableWithoutFeedback, Image} from 'react-native';
-import MapView, {Circle, Marker, Callout } from 'react-native-maps';
+import MapView, {Circle, Marker } from 'react-native-maps';
 import firestore from '@react-native-firebase/firestore';
 import {CoordsProps} from '../types';
 import {useNavigation} from '@react-navigation/native';
 import {getDate} from '../../hooks/getDate';
-import AverageGrade from '../AverageGrade';
+import Icon from 'react-native-vector-icons/Ionicons';
+import TextComponent from '../TextComponent';
 interface Marker {
   latitude: number;
   longitude: number;
@@ -14,6 +15,7 @@ interface Marker {
   date: string | null;
   image: string;
   id: string;
+  average: number
 }
 interface Props {
   searchText: string;
@@ -28,10 +30,10 @@ const MapScreenComponent = (props: Props) => {
   const [selectedMarker, setSelectedMarker] = useState<Marker | null>(null);
   const navigation = useNavigation();
   const [selectedRegion, setSelectedRegion] = useState({
-    latitude: 19.1232,
-    longitude: -104.3350,
-    latitudeDelta: 0.023,
-    longitudeDelta: 0.058,
+    latitude: location.latitude,
+    longitude: location.longitude,
+    latitudeDelta: 0.020,
+    longitudeDelta: 0.020,
     
   });
   useEffect(() => {
@@ -60,6 +62,7 @@ const MapScreenComponent = (props: Props) => {
             limitedCapacity: data.limitedCapacity,
             userId: data.userId,
             category: data.category,
+            average: data.average
           };
         });
         setMarkers(_markers);
@@ -104,6 +107,9 @@ const MapScreenComponent = (props: Props) => {
   });
   const markersToShow =
     searchText && filteredMarkers.length > 0 ? filteredMarkers : markers;
+
+console.log(selectedMarker)
+
   return (
     <TouchableWithoutFeedback onPress={closeInfoCard}>
       <View style={styles.container}>
@@ -140,16 +146,20 @@ const MapScreenComponent = (props: Props) => {
         {showInfo && selectedMarker && (
           <TouchableWithoutFeedback>
             <View style={styles.infoCard}>
-              <Text style={styles.title}>{selectedMarker.name}</Text>
-              <View style={styles.averagecontainer}>
-                <AverageGrade id={selectedMarker.id} style={styles.bottom10}/>
+              <View style={styles.titleContainer}>
+              <TextComponent text={selectedMarker.name} size={16} font='bold'/>
+              {selectedMarker.average > 0 && (
+               <View style={styles.ratingContainer}>
+              <Icon name="star" size={16} color="#A8BD29" />
+                <TextComponent text={selectedMarker.average.toString()} font='bold' />
+              </View> 
+              )}
               </View>
             <Image
                 source={{uri: selectedMarker.image}}
                 style={styles.infoImage}
                 resizeMode="cover"
-              />
-              {/* Añadir aquí más detalles si lo necesitas */}
+                />
               <TouchableOpacity style={styles.infoButton} onPress={onInfoButtonPress}>
                 <Text style={styles.infoButtonText}>Más información</Text>
               </TouchableOpacity>
@@ -183,12 +193,6 @@ const styles = StyleSheet.create({
     shadowRadius: 3, // solo para iOS
     shadowOffset: { width: 0, height: 2 }, // solo para iOS
   },
-  title: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: 'black',
-    bottom: -10,
-  },
   infoButton: {
     marginTop: 8,
     backgroundColor: '#007bff',
@@ -205,13 +209,19 @@ const styles = StyleSheet.create({
     height: 130,
     borderRadius: 10,
   },
-  bottom10: {
-    bottom: 13,
+  titleContainer: {
+    display: 'flex', 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    justifyContent: 'space-between', 
+    paddingBottom: 15
   },
-  averagecontainer: {
-    alignItems: 'flex-end',
+  ratingContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 3
   }
-
 });
 
 export default MapScreenComponent;
