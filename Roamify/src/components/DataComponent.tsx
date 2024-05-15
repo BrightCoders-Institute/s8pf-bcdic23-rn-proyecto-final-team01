@@ -42,6 +42,7 @@ const DataComponent = (props: Props) => {
           name={item.name}
           description={item.description}
           image={item.image}
+          average={item.average}
         />
       );
     }

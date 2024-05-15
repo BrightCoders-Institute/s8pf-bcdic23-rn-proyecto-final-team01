@@ -120,6 +120,7 @@ export type LocationProps = {
   name: string;
   userId?: string;
   id: string;
+  average: number
 }
 
 export type ResquestReviewsProps = {

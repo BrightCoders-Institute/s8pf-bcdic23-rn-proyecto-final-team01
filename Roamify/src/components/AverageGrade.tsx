@@ -1,45 +1,23 @@
-import {View, Text, StyleSheet, StyleProp, ViewStyle} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import { View, Text, StyleSheet, StyleProp, ViewStyle } from 'react-native';
+import React from 'react';
 import TextComponent from './TextComponent';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {getReviews} from '../hooks/getReviews';
-import {calculateAverageRating} from '.';
+
+
 interface Props {
-  id: string;
   style?: StyleProp<ViewStyle>;
+  average: number;
 }
 
 const AverageGrade = (props: Props) => {
-  const {id, style} = props;
-  const [reviews, setReviews] = useState<Array<any>>();
+  const { style, average } = props;
 
-  useEffect(() => {
-    const fetchReviews = async () => {
-      try {
-        const data = await getReviews(id);
-        setReviews(data?.reviewsData);
-      } catch (error) {
-        console.error('Error fetching events:', error);
-      }
-    };
-
-    fetchReviews();
-  }, [id]);
-
-  if (!reviews) {
-    return null;
-  }
-
-  const average = reviews ? calculateAverageRating(reviews) : null;
-
-  return (
-    average != null && (
-      <View style={[styles.container, style]}>
-        <TextComponent text={average.toString()} font="bold" />
-        <Icon name="star" size={25} color="#A8BD29" />
-      </View>
-    )
-  );
+  return average !== null && average !== 0 ? (
+    <View style={[styles.container, style]}>
+      <TextComponent text={average?.toString()} font="bold" />
+      <Icon name="star" size={25} color="#A8BD29" />
+    </View>
+  ) : null;
 };
 
 const styles = StyleSheet.create({

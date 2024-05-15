@@ -11,10 +11,11 @@ interface Props {
   image: string;
   favorite?: boolean;
   onPress: () => void;
+  average?: number;
 }
 
 const CardComponent = (props: Props) => {
-  const {id, name, description, image, favorite, onPress} = props;
+  const {id, name, description, image, favorite, onPress, average} = props;
 
   const renderDescription = (text: string) => {
     if (text === undefined || text === null) {
@@ -41,7 +42,7 @@ const CardComponent = (props: Props) => {
         <View style={styles.tittleContainer}>
           <TextComponent text={name} font="bold" size={24} />
         </View>
-        <AverageGrade id={id} />
+        <AverageGrade average={average} />
         <TextComponent text={`${limitedDescription}...`} />
       </View>
     </TouchableOpacity>
