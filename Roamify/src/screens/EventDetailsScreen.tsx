@@ -126,7 +126,7 @@ const EventDetailsScreen = ({navigation, route}) => {
       <View style={styles.detailsContainer}>
         <TextComponent text="Reseñas" font="bold" size={26} />
         <CommentComponent data={reviews} />
-        {!hasCommented && <ReviewComponent locationId={id} />}
+        {!hasCommented && <ReviewComponent average={data.average} locationId={id} />}
       </View>
     </ScrollView>
   );

@@ -17,7 +17,7 @@ const schemaReview = yup.object().shape({
   review: yup.string(),
 });
 
-const ReviewComponent = ({ locationId }) => {
+const ReviewComponent = ({ locationId, average }) => {
   const user = useAuth();
   const [ratingNumber, setRatingNumber] = useState<number>();
   const [ratingError, setRatingError] = useState(false);
@@ -25,7 +25,7 @@ const ReviewComponent = ({ locationId }) => {
   const [hidden, setHidden] = useState(false);
   const [reviews, setReviews] = useState([]);
 
-  const [averageRating, setAverageRating] = useState<number | null>(0);
+  const [averageRating, setAverageRating] = useState<number | null>(average);
 
   useEffect(() => {
     const unsubscribe = firestore()
