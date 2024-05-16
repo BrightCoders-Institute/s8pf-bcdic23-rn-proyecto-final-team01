@@ -87,6 +87,7 @@ const MyEventsScreen = () => {
                     name={item.name}
                     description={item.description}
                     image={item.image}
+                    average={item.average}
                   />
                 ),
             )}
@@ -111,6 +112,7 @@ const MyEventsScreen = () => {
                     name={item.name}
                     description={item.description}
                     image={item.image}
+                    average={item.average}
                   />
                 ),
             )}

@@ -94,6 +94,7 @@ const FormAddEvent = ({location, setLocation, setIsLoading}) => {
       firestore()
         .collection('locations')
         .add({
+          average: 0,
           name,
           description,
           image: link,
