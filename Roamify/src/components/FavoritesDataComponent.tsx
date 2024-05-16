@@ -71,6 +71,7 @@ const FavoritesDataComponent = (props: FavoritesDataComponentProps) => {
             description={item.description}
             image={item.image}
             favorite
+            average={item.average}
           />
         )}
       />
